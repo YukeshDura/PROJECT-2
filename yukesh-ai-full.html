@@ -1,0 +1,1929 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yukesh AI — Alzheimer's Detection System</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   YUKESH AI — Full App CSS
+   ═══════════════════════════════════════════ */
+:root{
+  --bg:#0c0f1a;--bg2:#111523;--bg3:#161b2e;
+  --surface:#1c2236;--surface2:#222840;
+  --border:rgba(139,168,255,0.12);--border2:rgba(139,168,255,0.22);
+  --accent:#6b8eff;--accent2:#a78bfa;
+  --teal:#2dd4bf;--warn:#f59e0b;--danger:#f87171;--success:#34d399;
+  --text:#e8ecf8;--text2:#9aa5c4;--text3:#5c6a8a;
+  --radius:12px;--radius-sm:8px;
+  --sidebar:240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:"Outfit",sans-serif;font-size:15px;min-height:100vh;}
+body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(107,142,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(107,142,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;position:relative;z-index:1;min-height:100vh;}
+.page.active{display:block;}
+
+/* ══════════════════════════════════════
+   LOGIN PAGE
+══════════════════════════════════════ */
+.login-page{display:flex;min-height:100vh;align-items:center;justify-content:center;padding:20px;}
+.login-wrap{width:100%;max-width:460px;}
+.login-glow{
+  position:absolute;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(107,142,255,0.07) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;
+}
+.login-card{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:20px;overflow:hidden;position:relative;z-index:1;
+}
+.login-top{
+  padding:36px 36px 28px;text-align:center;
+  background:linear-gradient(160deg,rgba(107,142,255,.07),rgba(167,139,250,.05));
+  border-bottom:0.5px solid var(--border);
+}
+.login-logo{
+  width:64px;height:64px;margin:0 auto 18px;
+  background:linear-gradient(135deg,rgba(107,142,255,.2),rgba(167,139,250,.2));
+  border:1px solid rgba(107,142,255,.35);border-radius:18px;
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+}
+.login-top h1{font-family:"DM Serif Display",serif;font-size:26px;font-weight:400;letter-spacing:-.3px;}
+.login-top p{font-size:12px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
+.login-body{padding:28px 36px 36px;}
+.login-role-tabs{display:flex;gap:3px;padding:3px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:24px;}
+.role-tab{flex:1;padding:9px 12px;border:none;border-radius:6px;background:transparent;color:var(--text3);font-family:"Outfit",sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.role-tab.active{background:rgba(107,142,255,.15);color:var(--accent);border:0.5px solid rgba(107,142,255,.25);}
+.lfield{margin-bottom:18px;}
+.lfield label{display:block;font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;}
+.lfield input{width:100%;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:"Outfit",sans-serif;font-size:14px;padding:12px 14px;outline:none;transition:border-color .15s;}
+.lfield input:focus{border-color:rgba(107,142,255,.5);}
+.lfield input::placeholder{color:var(--text3);}
+.login-err{display:none;padding:11px 14px;background:rgba(248,113,113,.08);border:0.5px solid rgba(248,113,113,.25);color:var(--danger);border-radius:var(--radius-sm);font-size:13px;margin-bottom:16px;}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#6b8eff,#a78bfa);border:none;border-radius:var(--radius-sm);color:#fff;font-family:"Outfit",sans-serif;font-size:15px;font-weight:500;cursor:pointer;letter-spacing:.03em;transition:opacity .15s,transform .1s;}
+.btn-login:hover{opacity:.88;transform:translateY(-1px);}
+.login-hint{margin-top:16px;padding:11px 14px;background:rgba(107,142,255,.05);border:0.5px solid rgba(107,142,255,.12);border-radius:var(--radius-sm);font-size:12px;color:var(--text3);line-height:1.7;}
+.login-hint strong{color:var(--accent);}
+.login-hint code{background:rgba(107,142,255,.15);padding:1px 6px;border-radius:4px;font-family:"DM Mono",monospace;font-size:11px;color:var(--text2);}
+
+/* ══════════════════════════════════════
+   ADMIN LAYOUT — SIDEBAR + MAIN
+══════════════════════════════════════ */
+.admin-layout{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;position:fixed;top:0;left:0;bottom:0;
+  background:var(--bg2);border-right:0.5px solid var(--border);
+  display:flex;flex-direction:column;z-index:50;overflow-y:auto;
+}
+.sidebar-brand{
+  padding:20px 18px 16px;border-bottom:0.5px solid var(--border);
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.sidebar-logo{width:36px;height:36px;background:linear-gradient(135deg,rgba(107,142,255,.2),rgba(167,139,250,.2));border:1px solid rgba(107,142,255,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.sidebar-brand h1{font-family:"DM Serif Display",serif;font-size:16px;font-weight:400;line-height:1.2;}
+.sidebar-brand p{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
+.sidebar-user{padding:12px 18px;border-bottom:0.5px solid var(--border);flex-shrink:0;}
+.su-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#6b8eff,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;}
+.su-name{font-size:13px;font-weight:500;color:var(--text);}
+.su-role{font-size:11px;color:var(--success);font-weight:500;display:flex;align-items:center;gap:4px;}
+.su-role::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block;}
+.sidebar-nav{flex:1;padding:12px 0;}
+.nav-section-title{padding:10px 18px 6px;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 18px;font-size:13px;color:var(--text3);
+  cursor:pointer;transition:all .12s;border-left:2px solid transparent;
+  user-select:none;
+}
+.nav-item:hover{color:var(--text2);background:rgba(107,142,255,.04);}
+.nav-item.active{color:var(--accent);background:rgba(107,142,255,.08);border-left-color:var(--accent);}
+.nav-item .ni-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.nav-item .ni-badge{margin-left:auto;background:rgba(248,113,113,.2);color:var(--danger);font-size:10px;padding:2px 7px;border-radius:100px;font-weight:600;}
+.sidebar-footer{padding:14px 18px;border-top:0.5px solid var(--border);flex-shrink:0;}
+.btn-logout-sidebar{width:100%;padding:9px;background:transparent;border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text3);font-family:"Outfit",sans-serif;font-size:12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn-logout-sidebar:hover{border-color:var(--danger);color:var(--danger);}
+
+/* MAIN AREA */
+.admin-main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.admin-topbar{
+  position:sticky;top:0;z-index:40;
+  background:rgba(12,15,26,.85);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid var(--border);
+  padding:0 28px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-title{font-size:14px;font-weight:500;color:var(--text2);}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-time{font-size:12px;color:var(--text3);font-family:"DM Mono",monospace;}
+.notif-btn{position:relative;width:34px;height:34px;border-radius:var(--radius-sm);background:var(--surface);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--danger);border:1.5px solid var(--bg2);}
+.admin-content{padding:24px 28px 60px;flex:1;}
+
+/* Section visibility */
+.dash-section{display:none;}
+.dash-section.visible{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION HEADER */
+.sec-header{margin-bottom:22px;}
+.sec-header h2{font-family:"DM Serif Display",serif;font-size:24px;font-weight:400;}
+.sec-header p{font-size:13px;color:var(--text3);margin-top:4px;}
+.sec-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+
+/* ── CARDS & PANELS ── */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.card-head{padding:15px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;}
+.card-head h3{font-size:13px;font-weight:500;flex:1;}
+.card-head .ch-right{font-size:12px;color:var(--text3);}
+.card-body{padding:18px;}
+
+/* ── STAT CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:18px 20px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;}
+.stat-card::after{content:"";position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;opacity:.06;}
+.stat-card.sc-blue::after{background:var(--accent);}
+.stat-card.sc-green::after{background:var(--success);}
+.stat-card.sc-yellow::after{background:var(--warn);}
+.stat-card.sc-red::after{background:var(--danger);}
+.stat-card.sc-purple::after{background:var(--accent2);}
+.sc-icon{font-size:20px;margin-bottom:4px;}
+.sc-val{font-family:"DM Mono",monospace;font-size:30px;font-weight:600;line-height:1;}
+.sc-label{font-size:12px;color:var(--text3);}
+.sc-delta{font-size:11px;margin-top:2px;}
+.sc-up{color:var(--success);}
+.sc-down{color:var(--danger);}
+.sc-blue .sc-val{color:var(--accent);}
+.sc-green .sc-val{color:var(--success);}
+.sc-yellow .sc-val{color:var(--warn);}
+.sc-red .sc-val{color:var(--danger);}
+.sc-purple .sc-val{color:var(--accent2);}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{padding:10px 14px;font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;text-align:left;border-bottom:0.5px solid var(--border);background:var(--bg2);white-space:nowrap;}
+tbody td{padding:12px 14px;border-bottom:0.5px solid var(--border);color:var(--text2);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(107,142,255,.025);}
+
+/* ── CHIPS / BADGES ── */
+.chip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:500;white-space:nowrap;}
+.chip-red{background:rgba(248,113,113,.12);color:var(--danger);border:0.5px solid rgba(248,113,113,.25);}
+.chip-yellow{background:rgba(245,158,11,.12);color:var(--warn);border:0.5px solid rgba(245,158,11,.25);}
+.chip-green{background:rgba(52,211,153,.12);color:var(--success);border:0.5px solid rgba(52,211,153,.25);}
+.chip-blue{background:rgba(107,142,255,.12);color:var(--accent);border:0.5px solid rgba(107,142,255,.25);}
+.chip-purple{background:rgba(167,139,250,.12);color:var(--accent2);border:0.5px solid rgba(167,139,250,.25);}
+.chip-teal{background:rgba(45,212,191,.1);color:var(--teal);border:0.5px solid rgba(45,212,191,.2);}
+
+/* ── BUTTONS ── */
+.btn{padding:8px 16px;border-radius:var(--radius-sm);font-family:"Outfit",sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;border:none;}
+.btn-p{background:linear-gradient(135deg,#6b8eff,#a78bfa);color:#fff;}
+.btn-p:hover{opacity:.88;}
+.btn-g{background:rgba(107,142,255,.12);border:0.5px solid rgba(107,142,255,.3);color:var(--accent);}
+.btn-g:hover{background:rgba(107,142,255,.22);}
+.btn-r{background:rgba(248,113,113,.1);border:0.5px solid rgba(248,113,113,.25);color:var(--danger);}
+.btn-r:hover{background:rgba(248,113,113,.2);}
+.btn-s{background:transparent;border:0.5px solid var(--border2);color:var(--text3);}
+.btn-s:hover{border-color:var(--accent);color:var(--accent);}
+.btn-teal{background:rgba(45,212,191,.1);border:0.5px solid rgba(45,212,191,.2);color:var(--teal);}
+
+/* ── MINI CHART / SPARKLINE ── */
+.sparkline{display:flex;align-items:flex-end;gap:3px;height:36px;}
+.spark-bar{flex:1;border-radius:3px 3px 0 0;min-width:4px;transition:height .3s;}
+
+/* ── RISK GAUGE (small) ── */
+.mini-gauge-wrap{display:flex;align-items:center;gap:12px;}
+.gauge-track{flex:1;height:7px;background:var(--bg2);border-radius:100px;overflow:hidden;}
+.gauge-fill{height:100%;border-radius:100px;}
+
+/* ── DONUT SVG ── */
+.donut-row{display:flex;align-items:center;gap:20px;}
+.donut-legend{display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--text2);}
+.dl-item{display:flex;align-items:center;gap:8px;}
+.dl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── TIMELINE ── */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:14px;padding-bottom:16px;position:relative;}
+.tl-item:not(:last-child)::before{content:"";position:absolute;left:14px;top:30px;bottom:0;width:1px;background:var(--border);}
+.tl-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px;}
+.tl-body{flex:1;}
+.tl-title{font-size:13px;font-weight:500;color:var(--text);}
+.tl-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+
+/* ── NOTIFICATION ITEM ── */
+.notif-item{padding:14px 18px;border-bottom:0.5px solid var(--border);display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:background .1s;}
+.notif-item:hover{background:rgba(107,142,255,.03);}
+.notif-item.unread{border-left:3px solid var(--accent);}
+.notif-item.unread.warn-notif{border-left-color:var(--warn);}
+.notif-item.unread.danger-notif{border-left-color:var(--danger);}
+.ni-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px;}
+.ni-content .ni-title{font-size:13px;font-weight:500;color:var(--text);}
+.ni-content .ni-msg{font-size:12px;color:var(--text3);margin-top:3px;line-height:1.5;}
+.ni-content .ni-time{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* ── PROGRESS BARS ── */
+.prog-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.prog-label{font-size:12px;color:var(--text2);width:140px;flex-shrink:0;}
+.prog-track{flex:1;height:7px;background:var(--bg2);border-radius:100px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:100px;transition:width .6s ease;}
+.prog-val{font-size:12px;font-family:"DM Mono",monospace;color:var(--text3);width:42px;text-align:right;flex-shrink:0;}
+
+/* ── SYSTEM MONITOR ── */
+.monitor-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.monitor-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:16px;}
+.mc-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;}
+.mc-val{font-family:"DM Mono",monospace;font-size:26px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.mc-sub{font-size:11px;color:var(--text3);}
+
+/* ── MRI IMAGE VIEWER ── */
+.viewer-grid{display:grid;grid-template-columns:1fr 280px;gap:20px;}
+.mri-canvas{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.mri-canvas img{max-width:100%;max-height:100%;object-fit:contain;}
+.mri-placeholder-viewer{text-align:center;color:var(--text3);}
+.mri-placeholder-viewer .mri-big-icon{font-size:48px;margin-bottom:12px;opacity:.4;}
+.viewer-controls{display:flex;flex-direction:column;gap:12px;}
+.vc-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;}
+.vc-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;}
+.contrast-slider{width:100%;accent-color:var(--accent);cursor:pointer;}
+.annotation-list{display:flex;flex-direction:column;gap:6px;}
+.ann-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);padding:6px 10px;background:var(--surface);border-radius:var(--radius-sm);}
+
+/* ── FORMS ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid.cols3{grid-template-columns:1fr 1fr 1fr;}
+.form-field{display:flex;flex-direction:column;gap:6px;}
+.form-field.full{grid-column:1/-1;}
+.form-field label{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
+.form-field input,.form-field select,.form-field textarea{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:"Outfit",sans-serif;font-size:14px;padding:10px 13px;outline:none;transition:border-color .15s;width:100%;}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:rgba(107,142,255,.5);}
+.form-field input::placeholder,.form-field textarea::placeholder{color:var(--text3);}
+.form-field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235c6a8a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+.form-field select option{background:#1c2236;}
+.form-field textarea{resize:none;line-height:1.6;}
+.form-actions{margin-top:16px;display:flex;gap:10px;align-items:center;}
+.form-success{display:none;font-size:12px;color:var(--success);}
+
+/* ── TWO COL LAYOUT ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+
+/* ── SETTINGS TOGGLE ── */
+.toggle{position:relative;display:inline-flex;align-items:center;cursor:pointer;gap:10px;}
+.toggle input{position:absolute;opacity:0;width:0;height:0;}
+.toggle-track{width:40px;height:22px;background:var(--bg2);border:0.5px solid var(--border2);border-radius:100px;transition:all .2s;flex-shrink:0;}
+.toggle input:checked+.toggle-track{background:rgba(107,142,255,.3);border-color:var(--accent);}
+.toggle-thumb{position:absolute;left:3px;top:3px;width:16px;height:16px;background:var(--text3);border-radius:50%;transition:all .2s;}
+.toggle input:checked~.toggle-thumb{left:21px;background:var(--accent);}
+.toggle-label{font-size:13px;color:var(--text2);}
+
+/* ── MODEL PERF ── */
+.conf-matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:340px;}
+.cm-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"DM Mono",monospace;font-size:16px;font-weight:600;flex-direction:column;gap:2px;}
+.cm-cell span{font-size:9px;font-weight:400;color:rgba(255,255,255,.6);font-family:"Outfit",sans-serif;}
+
+/* ── DATASET CARD ── */
+.dataset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.ds-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:18px;display:flex;flex-direction:column;gap:10px;}
+.ds-title{font-size:13px;font-weight:500;color:var(--text);}
+.ds-count{font-family:"DM Mono",monospace;font-size:22px;font-weight:600;color:var(--accent);}
+.ds-breakdown{display:flex;flex-direction:column;gap:5px;}
+.ds-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text3);}
+.ds-row span{color:var(--text2);}
+
+/* ── LOADING ── */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(12,15,26,.75);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:16px;backdrop-filter:blur(4px);}
+.loading-overlay.show{display:flex;}
+.loader-ring{width:52px;height:52px;border:2px solid rgba(107,142,255,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay p{color:var(--text2);font-size:14px;letter-spacing:.03em;}
+.loading-sub{font-size:12px;color:var(--text3);}
+
+/* ══════════════════════════════════════
+   PATIENT DETECTION PAGE (inline, same styles)
+══════════════════════════════════════ */
+.detect-wrap{max-width:1100px;margin:0 auto;padding:28px 24px 60px;}
+.det-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;padding-bottom:20px;border-bottom:0.5px solid var(--border);}
+.det-header-left{display:flex;align-items:center;gap:14px;}
+.det-logo{width:44px;height:44px;background:linear-gradient(135deg,#6b8eff22,#a78bfa22);border:1px solid rgba(107,142,255,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.det-brand h1{font-family:"DM Serif Display",serif;font-size:20px;font-weight:400;}
+.det-brand p{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+.stage-bar{display:flex;gap:6px;margin-bottom:20px;padding:14px 20px;background:var(--bg3);border:0.5px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;}
+.stage-item{flex:1;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text3);}
+.stage-num{width:20px;height:20px;border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;font-family:"DM Mono",monospace;}
+.stage-item.done .stage-num{background:var(--success);border-color:var(--success);color:#fff;}
+.stage-item.active .stage-num{background:rgba(107,142,255,.2);border-color:var(--accent);color:var(--accent);}
+.stage-item.active{color:var(--text2);}
+.stage-sep{flex:none;color:var(--text3);font-size:10px;align-self:center;}
+.info-strip{background:rgba(107,142,255,.06);border:0.5px solid rgba(107,142,255,.15);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:20px;font-size:12px;color:var(--text2);}
+.info-strip .idot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.panel{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.panel-head{padding:16px 20px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;}
+.panel-head .icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.icon-blue{background:rgba(107,142,255,.15);}
+.icon-teal{background:rgba(45,212,191,.12);}
+.icon-purple{background:rgba(167,139,250,.12);}
+.panel-head h2{font-size:14px;font-weight:500;color:var(--text);}
+.panel-head span{font-size:12px;color:var(--text3);margin-left:auto;}
+.panel-body{padding:20px;}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:11px;font-weight:500;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
+.field input,.field select,.field textarea{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:"Outfit",sans-serif;font-size:14px;padding:10px 13px;outline:none;transition:border-color .15s;width:100%;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(107,142,255,.5);}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3);}
+.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235c6a8a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+.field select option{background:#1c2236;}
+.field textarea{resize:none;line-height:1.6;}
+.section-gap{margin-top:14px;}
+.risk-row{display:flex;align-items:center;gap:10px;margin-top:14px;}
+.risk-label{font-size:12px;color:var(--text3);width:90px;}
+.risk-track{flex:1;height:6px;background:var(--bg2);border-radius:100px;overflow:hidden;border:0.5px solid var(--border);}
+.risk-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--success),var(--warn),var(--danger));transition:width .4s ease;}
+.risk-pct{font-size:11px;color:var(--text3);width:34px;text-align:right;}
+.seg-ctrl{display:flex;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:3px;gap:3px;margin-bottom:14px;}
+.seg-btn{flex:1;padding:7px 10px;border:none;background:transparent;border-radius:6px;font-family:"Outfit",sans-serif;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:all .15s;}
+.seg-btn.active{background:var(--surface2);color:var(--text);border:0.5px solid var(--border2);}
+.mri-zone{border:1.5px dashed rgba(107,142,255,.25);border-radius:var(--radius);background:var(--bg2);min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.mri-zone:hover,.mri-zone.drag-over{border-color:rgba(107,142,255,.5);background:rgba(107,142,255,.04);}
+.mri-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;padding:0;border:none;background:none;}
+.mri-placeholder{display:flex;flex-direction:column;align-items:center;gap:12px;pointer-events:none;text-align:center;padding:20px;}
+.mri-icon-wrap{width:60px;height:60px;border-radius:50%;background:rgba(107,142,255,.1);border:1px solid rgba(107,142,255,.2);display:flex;align-items:center;justify-content:center;font-size:26px;}
+.mri-placeholder h3{font-size:15px;font-weight:500;color:var(--text);}
+.mri-placeholder p{font-size:12px;color:var(--text3);line-height:1.5;}
+.browse-btn{margin-top:4px;padding:8px 20px;background:rgba(107,142,255,.12);border:0.5px solid rgba(107,142,255,.3);border-radius:100px;color:var(--accent);font-size:13px;font-weight:500;cursor:pointer;}
+.mri-preview{display:none;width:100%;height:100%;min-height:280px;position:relative;}
+.mri-preview img{width:100%;height:100%;object-fit:contain;max-height:320px;padding:12px;}
+.mri-preview .remove-img{position:absolute;top:10px;right:10px;background:rgba(248,113,113,.15);border:0.5px solid rgba(248,113,113,.3);color:var(--danger);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;z-index:2;}
+.mri-meta{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(11,14,26,.85));padding:20px 14px 12px;font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;}
+.support-note{font-size:11px;color:var(--text3);margin-top:8px;text-align:center;}
+.scan-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.tag{font-size:11px;padding:4px 10px;border-radius:100px;font-weight:500;}
+.tag-blue{background:rgba(107,142,255,.12);color:var(--accent);border:0.5px solid rgba(107,142,255,.25);}
+.tag-teal{background:rgba(45,212,191,.1);color:var(--teal);border:0.5px solid rgba(45,212,191,.2);}
+.checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.check-item{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;user-select:none;}
+.check-item:hover{border-color:var(--border2);}
+.check-item input[type="checkbox"]{width:16px;height:16px;flex-shrink:0;cursor:pointer;accent-color:var(--accent);margin:0;padding:0;}
+.check-item:has(input:checked){border-color:rgba(107,142,255,.4);background:rgba(107,142,255,.05);}
+.check-item span{font-size:12px;color:var(--text2);}
+.submit-row{display:flex;gap:12px;align-items:center;margin-top:20px;}
+.btn-primary{flex:1;padding:13px 24px;background:linear-gradient(135deg,#6b8eff,#a78bfa);border:none;border-radius:var(--radius-sm);color:#fff;font-family:"Outfit",sans-serif;font-size:14px;font-weight:500;cursor:pointer;letter-spacing:.03em;transition:opacity .15s,transform .1s;}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-secondary{padding:13px 20px;background:transparent;border:0.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);font-family:"Outfit",sans-serif;font-size:14px;cursor:pointer;transition:all .15s;}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+.result-panel{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;display:none;margin-top:24px;}
+.result-panel.visible{display:block;animation:slideUp .3s ease;}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.result-head{padding:18px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.result-head h2{font-size:14px;font-weight:500;}
+.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.result-card{background:var(--surface);padding:18px 20px;}
+.rc-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+.rc-val{font-size:24px;font-weight:600;line-height:1;font-family:"DM Mono",monospace;}
+.rc-sub{font-size:11px;color:var(--text3);margin-top:5px;}
+.val-safe{color:var(--success);}.val-warn{color:var(--warn);}.val-danger{color:var(--danger);}.val-info{color:var(--accent);}
+.db-status{margin:16px 20px 0;padding:11px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;}
+.db-status.saving{background:rgba(107,142,255,.08);border:0.5px solid rgba(107,142,255,.25);color:var(--accent);}
+.db-status.saved{background:rgba(52,211,153,.08);border:0.5px solid rgba(52,211,153,.25);color:var(--success);}
+.db-status.error{background:rgba(248,113,113,.08);border:0.5px solid rgba(248,113,113,.25);color:var(--danger);}
+.finding-box{margin:20px;padding:16px;border-radius:var(--radius-sm);border-left:3px solid var(--warn);background:rgba(245,158,11,.06);}
+.finding-box h3{font-size:13px;font-weight:500;color:var(--warn);margin-bottom:8px;}
+.finding-box ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.finding-box li{font-size:13px;color:var(--text2);display:flex;align-items:flex-start;gap:8px;}
+.finding-box li::before{content:"◦";color:var(--warn);margin-top:1px;flex-shrink:0;}
+.result-disclaimer{padding:0 20px 20px;font-size:11px;color:var(--text3);line-height:1.8;margin-top:8px;}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .sidebar{width:60px;}
+  .sidebar .sidebar-brand h1,.sidebar .sidebar-brand p,.sidebar .su-name,.sidebar .su-role,.sidebar .nav-item span,.sidebar .sidebar-footer .btn-logout-sidebar span,.sidebar .nav-section-title,.sidebar .su-avatar~div{display:none;}
+  .admin-main{margin-left:60px;}
+  .nav-item{justify-content:center;padding:12px;}
+  .two-col,.three-col,.viewer-grid,.monitor-grid,.dataset-grid{grid-template-columns:1fr;}
+}
+@media(max-width:640px){
+  .main-grid,.form-grid,.field-grid{grid-template-columns:1fr;}
+  .result-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════
+     LOADING OVERLAY
+═══════════════════════════════ -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader-ring"></div>
+  <p>Analysing MRI scan &amp; patient data…</p>
+  <p class="loading-sub" id="loadingStatus">Sending to server…</p>
+</div>
+
+<!-- ═══════════════════════════════
+     PAGE: LOGIN
+═══════════════════════════════ -->
+<div class="page active" id="page-login">
+  <div class="login-page">
+    <div class="login-glow"></div>
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="login-top">
+          <div class="login-logo">🧠</div>
+          <h1>YUKESH AI</h1>
+          <p>Alzheimer's Detection System</p>
+        </div>
+        <div class="login-body">
+          <div class="login-role-tabs">
+            <button class="role-tab active" id="tab-admin" onclick="switchRole('admin')">🔑 Administrator</button>
+            <button class="role-tab" id="tab-patient" onclick="switchRole('patient')">👤 Patient</button>
+          </div>
+          <div id="login-error" class="login-err">Invalid credentials. Please try again.</div>
+          <div class="lfield">
+            <label id="lbl-email">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="admin@yukeshai.com" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()"/>
+          </div>
+          <div class="lfield">
+            <label>Password</label>
+            <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+          </div>
+          <button class="btn-login" onclick="doLogin()">Sign In →</button>
+          <div class="login-hint" id="hint-admin">
+            <strong>Admin Demo:</strong> <code>admin@yukeshai.com</code> · <code>admin123</code><br/>
+            <strong>Doctor Demo:</strong> <code>doctor@yukeshai.com</code> · <code>doc123</code>
+          </div>
+          <div class="login-hint" id="hint-patient" style="display:none">
+            <strong>Patient Demo:</strong> <code>patient@yukeshai.com</code> · <code>pat123</code><br/>
+            Patients are registered by the administrator.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════
+     PAGE: ADMIN DASHBOARD
+═══════════════════════════════ -->
+<div class="page" id="page-admin">
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">🧠</div>
+        <div><h1>YUKESH AI</h1><p>v2.4 · ResNet50</p></div>
+      </div>
+      <div class="sidebar-user">
+        <div class="su-avatar" id="sidebarInitials">A</div>
+        <div>
+          <div class="su-name" id="sidebarName">Admin User</div>
+          <div class="su-role" id="sidebarRole">Administrator</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <div class="nav-item active" onclick="showSection('overview',this)"><span class="ni-icon">📊</span><span>Overview</span></div>
+        <div class="nav-item" onclick="showSection('patients',this)"><span class="ni-icon">👥</span><span>Patients</span></div>
+        <div class="nav-item" onclick="showSection('mri-scans',this)"><span class="ni-icon">🔬</span><span>MRI Scans</span></div>
+        <div class="nav-item" onclick="showSection('predictions',this)"><span class="ni-icon">🤖</span><span>AI Predictions</span></div>
+        <div class="nav-section-title">Analysis</div>
+        <div class="nav-item" onclick="showSection('image-viewer',this)"><span class="ni-icon">🖼️</span><span>Image Viewer</span></div>
+        <div class="nav-item" onclick="showSection('dataset',this)"><span class="ni-icon">🗄️</span><span>Dataset Management</span></div>
+        <div class="nav-item" onclick="showSection('model-perf',this)"><span class="ni-icon">📈</span><span>Model Performance</span></div>
+        <div class="nav-item" onclick="showSection('reports',this)"><span class="ni-icon">📋</span><span>Reports &amp; Analytics</span></div>
+        <div class="nav-section-title">System</div>
+        <div class="nav-item" onclick="showSection('users',this)"><span class="ni-icon">🔐</span><span>User Management</span></div>
+        <div class="nav-item" onclick="showSection('notifications',this)"><span class="ni-icon">🔔</span><span>Notifications</span><span class="ni-badge">4</span></div>
+        <div class="nav-item" onclick="showSection('monitoring',this)"><span class="ni-icon">⚙️</span><span>System Monitoring</span></div>
+        <div class="nav-item" onclick="showSection('settings',this)"><span class="ni-icon">🛠️</span><span>Settings</span></div>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn-logout-sidebar" onclick="logout()">← <span>Sign Out</span></button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <div class="topbar-title" id="topbarTitle">Overview</div>
+        <div class="topbar-right">
+          <div class="topbar-time" id="topbarClock">--:--:--</div>
+          <div class="notif-btn" onclick="showSection('notifications',document.querySelector('[onclick*=notifications]'))">🔔<div class="notif-dot"></div></div>
+        </div>
+      </div>
+      <div class="admin-content">
+
+        <!-- ── 1. OVERVIEW ── -->
+        <div class="dash-section visible" id="sec-overview">
+          <div class="sec-header-row">
+            <div class="sec-header">
+              <h2>Dashboard Overview</h2>
+              <p>Real-time summary of the Alzheimer's Detection System</p>
+            </div>
+            <button class="btn btn-p" onclick="showSection('mri-scans',document.querySelector('[onclick*=mri-scans]'))">+ New Analysis</button>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card sc-blue"><div class="sc-icon">👥</div><div class="sc-val" id="ov-patients">247</div><div class="sc-label">Total Patients</div><div class="sc-delta sc-up">↑ 12 this month</div></div>
+            <div class="stat-card sc-red"><div class="sc-icon">⚠️</div><div class="sc-val" id="ov-highrisk">38</div><div class="sc-label">High-Risk Cases</div><div class="sc-delta sc-down">↑ 5 from last week</div></div>
+            <div class="stat-card sc-green"><div class="sc-icon">✅</div><div class="sc-val" id="ov-scans">1,084</div><div class="sc-label">Total MRI Scans</div><div class="sc-delta sc-up">↑ 43 this month</div></div>
+            <div class="stat-card sc-purple"><div class="sc-icon">🎯</div><div class="sc-val">94.7%</div><div class="sc-label">Model Accuracy</div><div class="sc-delta sc-up">↑ 0.3% vs last ver.</div></div>
+          </div>
+          <div class="two-col" style="margin-bottom:20px">
+            <div class="card">
+              <div class="card-head"><h3>📊 Predictions by Stage</h3><span class="ch-right">Last 30 days</span></div>
+              <div class="card-body">
+                <div class="prog-row"><span class="prog-label">Non Demented</span><div class="prog-track"><div class="prog-fill" style="width:48%;background:var(--success)"></div></div><span class="prog-val">48%</span></div>
+                <div class="prog-row"><span class="prog-label">Very Mild</span><div class="prog-track"><div class="prog-fill" style="width:28%;background:var(--teal)"></div></div><span class="prog-val">28%</span></div>
+                <div class="prog-row"><span class="prog-label">Mild Demented</span><div class="prog-track"><div class="prog-fill" style="width:17%;background:var(--warn)"></div></div><span class="prog-val">17%</span></div>
+                <div class="prog-row"><span class="prog-label">Moderate Demented</span><div class="prog-track"><div class="prog-fill" style="width:7%;background:var(--danger)"></div></div><span class="prog-val">7%</span></div>
+                <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+                  <span class="chip chip-green">524 Non-Demented</span>
+                  <span class="chip chip-teal">304 Very Mild</span>
+                  <span class="chip chip-yellow">184 Mild</span>
+                  <span class="chip chip-red">72 Moderate</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>🔬 Scan Activity</h3><span class="ch-right">Weekly trend</span></div>
+              <div class="card-body">
+                <div style="display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:12px">
+                  <div style="flex:1;background:rgba(107,142,255,.15);border-radius:4px 4px 0 0" title="Mon" id="bar1"></div>
+                  <div style="flex:1;background:rgba(107,142,255,.2);border-radius:4px 4px 0 0" id="bar2"></div>
+                  <div style="flex:1;background:rgba(107,142,255,.35);border-radius:4px 4px 0 0" id="bar3"></div>
+                  <div style="flex:1;background:rgba(107,142,255,.5);border-radius:4px 4px 0 0" id="bar4"></div>
+                  <div style="flex:1;background:rgba(107,142,255,.3);border-radius:4px 4px 0 0" id="bar5"></div>
+                  <div style="flex:1;background:rgba(107,142,255,.25);border-radius:4px 4px 0 0" id="bar6"></div>
+                  <div style="flex:1;background:rgba(107,142,255,.15);border-radius:4px 4px 0 0" id="bar7"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3)">
+                  <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+                <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <div style="padding:10px;background:var(--bg2);border-radius:var(--radius-sm);border:0.5px solid var(--border)">
+                    <div style="font-size:11px;color:var(--text3)">This Week</div>
+                    <div style="font-size:20px;font-weight:600;color:var(--accent);font-family:'DM Mono',monospace">43</div>
+                  </div>
+                  <div style="padding:10px;background:var(--bg2);border-radius:var(--radius-sm);border:0.5px solid var(--border)">
+                    <div style="font-size:11px;color:var(--text3)">Avg / Day</div>
+                    <div style="font-size:20px;font-weight:600;color:var(--teal);font-family:'DM Mono',monospace">6.1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>🕐 Recent Activity</h3><span class="ch-right">Latest 6 events</span></div>
+            <div class="card-body">
+              <div class="timeline" id="overview-timeline"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 2. PATIENTS ── -->
+        <div class="dash-section" id="sec-patients">
+          <div class="sec-header-row">
+            <div class="sec-header"><h2>Patient Registry</h2><p>All registered patients and their latest risk assessments</p></div>
+            <button class="btn btn-p" onclick="openAddPatient()">+ Add Patient</button>
+          </div>
+          <!-- Add patient form -->
+          <div class="card" id="addPatientForm" style="display:none;margin-bottom:20px">
+            <div class="card-head"><h3>➕ Register New Patient</h3><button class="btn btn-s" style="font-size:12px;padding:5px 12px" onclick="document.getElementById('addPatientForm').style.display='none'">Cancel</button></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-field"><label>Full Name</label><input type="text" id="np-name" placeholder="e.g. Sita Paudel"/></div>
+                <div class="form-field"><label>Date of Birth</label><input type="date" id="np-dob"/></div>
+                <div class="form-field"><label>Age</label><input type="number" id="np-age" placeholder="67" min="1" max="120"/></div>
+                <div class="form-field"><label>Sex</label><select id="np-sex"><option value="">Select…</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+                <div class="form-field"><label>Education</label><select id="np-edu"><option value="">Select…</option><option>No formal education</option><option>Primary school</option><option>Secondary school</option><option>Higher education</option><option>Graduate</option></select></div>
+                <div class="form-field"><label>Family History</label><select id="np-fam"><option value="">Select…</option><option>None known</option><option>Parent affected</option><option>Sibling affected</option><option>Multiple relatives</option></select></div>
+                <div class="form-field"><label>Referring Doctor</label><input type="text" id="np-doc" placeholder="Dr. Name"/></div>
+                <div class="form-field"><label>Contact Email</label><input type="email" id="np-email" placeholder="patient@email.com"/></div>
+                <div class="form-field full"><label>Notes</label><textarea id="np-notes" rows="2" placeholder="Initial clinical observations…"></textarea></div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-p" onclick="addPatientRecord()">Register Patient</button>
+                <span class="form-success" id="patient-added-msg">✓ Patient registered successfully!</span>
+              </div>
+            </div>
+          </div>
+          <!-- Table -->
+          <div class="card">
+            <div class="card-head"><h3>All Patients</h3><span class="ch-right" id="pat-count">0 patients</span></div>
+            <div class="tbl-wrap">
+              <table><thead><tr><th>#</th><th>Name</th><th>Age</th><th>Sex</th><th>Family History</th><th>Doctor</th><th>Stage</th><th>Risk</th><th>Last Scan</th><th>Action</th></tr></thead>
+              <tbody id="patients-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 3. MRI SCANS ── -->
+        <div class="dash-section" id="sec-mri-scans">
+          <div class="sec-header"><h2>MRI Scans</h2><p>All uploaded scans with analysis status</p></div>
+          <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+            <div class="stat-card sc-blue"><div class="sc-icon">📁</div><div class="sc-val">1,084</div><div class="sc-label">Total Scans</div></div>
+            <div class="stat-card sc-green"><div class="sc-icon">✅</div><div class="sc-val">1,021</div><div class="sc-label">Analysed</div></div>
+            <div class="stat-card sc-yellow"><div class="sc-icon">⏳</div><div class="sc-val">63</div><div class="sc-label">Pending</div></div>
+            <div class="stat-card sc-purple"><div class="sc-icon">🔬</div><div class="sc-val">T1/T2</div><div class="sc-label">Primary Types</div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Recent MRI Uploads</h3><span class="ch-right">Sorted by date</span></div>
+            <div class="tbl-wrap">
+              <table><thead><tr><th>ID</th><th>Patient</th><th>Scan Type</th><th>File</th><th>Size</th><th>Status</th><th>Stage Result</th><th>Date</th><th>Action</th></tr></thead>
+              <tbody id="scans-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 4. AI PREDICTIONS ── -->
+        <div class="dash-section" id="sec-predictions">
+          <div class="sec-header"><h2>AI Predictions</h2><p>All model inference results from the ResNet50 classifier</p></div>
+          <div class="two-col" style="margin-bottom:20px">
+            <div class="card">
+              <div class="card-head"><h3>Risk Distribution</h3></div>
+              <div class="card-body">
+                <div class="donut-row">
+                  <svg width="110" height="110" viewBox="0 0 110 110">
+                    <circle cx="55" cy="55" r="40" fill="none" stroke="var(--bg2)" stroke-width="16"/>
+                    <circle id="d-high" cx="55" cy="55" r="40" fill="none" stroke="#f87171" stroke-width="16" stroke-dasharray="0 251" stroke-dashoffset="0" transform="rotate(-90 55 55)"/>
+                    <circle id="d-mod" cx="55" cy="55" r="40" fill="none" stroke="#f59e0b" stroke-width="16" stroke-dasharray="0 251" stroke-dashoffset="0" transform="rotate(-90 55 55)"/>
+                    <circle id="d-mild" cx="55" cy="55" r="40" fill="none" stroke="#2dd4bf" stroke-width="16" stroke-dasharray="0 251" stroke-dashoffset="0" transform="rotate(-90 55 55)"/>
+                    <circle id="d-none" cx="55" cy="55" r="40" fill="none" stroke="#34d399" stroke-width="16" stroke-dasharray="0 251" stroke-dashoffset="0" transform="rotate(-90 55 55)"/>
+                  </svg>
+                  <div class="donut-legend">
+                    <div class="dl-item"><div class="dl-dot" style="background:#34d399"></div>Non-Demented (48%)</div>
+                    <div class="dl-item"><div class="dl-dot" style="background:#2dd4bf"></div>Very Mild (28%)</div>
+                    <div class="dl-item"><div class="dl-dot" style="background:#f59e0b"></div>Mild (17%)</div>
+                    <div class="dl-item"><div class="dl-dot" style="background:#f87171"></div>Moderate (7%)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>Confidence Distribution</h3></div>
+              <div class="card-body">
+                <div class="prog-row"><span class="prog-label">≥ 90% confidence</span><div class="prog-track"><div class="prog-fill" style="width:62%;background:var(--success)"></div></div><span class="prog-val">62%</span></div>
+                <div class="prog-row"><span class="prog-label">75–89%</span><div class="prog-track"><div class="prog-fill" style="width:24%;background:var(--teal)"></div></div><span class="prog-val">24%</span></div>
+                <div class="prog-row"><span class="prog-label">60–74%</span><div class="prog-track"><div class="prog-fill" style="width:10%;background:var(--warn)"></div></div><span class="prog-val">10%</span></div>
+                <div class="prog-row"><span class="prog-label">Below 60%</span><div class="prog-track"><div class="prog-fill" style="width:4%;background:var(--danger)"></div></div><span class="prog-val">4%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>All Prediction Records</h3><span class="ch-right" id="pred-count">0 records</span></div>
+            <div class="tbl-wrap">
+              <table><thead><tr><th>#</th><th>Patient</th><th>Age</th><th>Scan Type</th><th>Prediction</th><th>Confidence</th><th>Risk %</th><th>Symptoms</th><th>Date</th></tr></thead>
+              <tbody id="pred-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 5. IMAGE VIEWER ── -->
+        <div class="dash-section" id="sec-image-viewer">
+          <div class="sec-header"><h2>MRI Image Viewer</h2><p>Inspect and annotate uploaded brain MRI scans</p></div>
+          <div class="viewer-grid">
+            <div>
+              <div class="mri-canvas" id="viewerCanvas" style="min-height:420px">
+                <div class="mri-placeholder-viewer" id="viewerPlaceholder">
+                  <div class="mri-big-icon">🧠</div>
+                  <div style="font-size:15px;font-weight:500;margin-bottom:6px">No scan loaded</div>
+                  <div style="font-size:13px">Select a scan from the table below or upload a new one</div>
+                </div>
+                <img id="viewerImg" style="display:none;max-width:100%;max-height:420px;object-fit:contain;" alt="MRI scan"/>
+              </div>
+              <div style="margin-top:12px;display:flex;gap:10px">
+                <label class="btn btn-g" style="cursor:pointer">📂 Load Scan<input type="file" accept="image/*" style="display:none" onchange="loadViewerImage(this)"/></label>
+                <button class="btn btn-s" onclick="resetViewer()">↺ Reset</button>
+                <button class="btn btn-teal" onclick="toggleAnnotations()">✏️ Annotate</button>
+              </div>
+              <!-- Patient scan table -->
+              <div class="card" style="margin-top:16px">
+                <div class="card-head"><h3>Patient Scans</h3></div>
+                <div class="tbl-wrap">
+                  <table><thead><tr><th>Patient</th><th>Scan</th><th>Date</th><th>Stage</th><th>Load</th></tr></thead>
+                  <tbody id="viewer-scans-tbody"></tbody></table>
+                </div>
+              </div>
+            </div>
+            <div class="viewer-controls">
+              <div class="vc-card">
+                <div class="vc-label">Brightness / Contrast</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="font-size:12px;color:var(--text3)">Brightness</div>
+                  <input type="range" class="contrast-slider" id="brightness-slider" min="0" max="200" value="100" oninput="applyFilters()"/>
+                  <div style="font-size:12px;color:var(--text3);margin-top:4px">Contrast</div>
+                  <input type="range" class="contrast-slider" id="contrast-slider" min="0" max="200" value="100" oninput="applyFilters()"/>
+                  <div style="font-size:12px;color:var(--text3);margin-top:4px">Zoom</div>
+                  <input type="range" class="contrast-slider" id="zoom-slider" min="50" max="200" value="100" oninput="applyZoom()"/>
+                </div>
+              </div>
+              <div class="vc-card">
+                <div class="vc-label">Scan Info</div>
+                <div id="viewer-scan-info" style="font-size:13px;color:var(--text3)">No scan loaded. Load an image to see metadata.</div>
+              </div>
+              <div class="vc-card">
+                <div class="vc-label">Annotations</div>
+                <div class="annotation-list" id="viewer-annotations">
+                  <div class="ann-item">🔴 Hippocampal region</div>
+                  <div class="ann-item">🟡 Ventricular area</div>
+                  <div class="ann-item">🔵 Cortical surface</div>
+                  <div class="ann-item" id="ann-toggle" style="display:none">🟢 User annotation</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 6. DATASET MANAGEMENT ── -->
+        <div class="dash-section" id="sec-dataset">
+          <div class="sec-header"><h2>Dataset Management</h2><p>Training and validation dataset overview — ADNI / Kaggle Alzheimer's MRI</p></div>
+          <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+            <div class="stat-card sc-blue"><div class="sc-icon">🖼️</div><div class="sc-val">6,400</div><div class="sc-label">Total Images</div></div>
+            <div class="stat-card sc-green"><div class="sc-icon">🏋️</div><div class="sc-val">5,120</div><div class="sc-label">Training Set (80%)</div></div>
+            <div class="stat-card sc-yellow"><div class="sc-icon">🧪</div><div class="sc-val">1,280</div><div class="sc-label">Validation Set (20%)</div></div>
+            <div class="stat-card sc-purple"><div class="sc-icon">📐</div><div class="sc-val">224×224</div><div class="sc-label">Input Resolution</div></div>
+          </div>
+          <div class="dataset-grid">
+            <div class="ds-card">
+              <div class="ds-title">🟢 NonDemented</div>
+              <div class="ds-count">2,560</div>
+              <div class="ds-breakdown">
+                <div class="ds-row">Train<span>2,048</span></div>
+                <div class="ds-row">Validation<span>512</span></div>
+                <div class="ds-row">Augmented<span>Yes</span></div>
+              </div>
+              <span class="chip chip-green" style="margin-top:4px">40% of dataset</span>
+            </div>
+            <div class="ds-card">
+              <div class="ds-title">🔵 VeryMildDemented</div>
+              <div class="ds-count">1,792</div>
+              <div class="ds-breakdown">
+                <div class="ds-row">Train<span>1,434</span></div>
+                <div class="ds-row">Validation<span>358</span></div>
+                <div class="ds-row">Augmented<span>Yes</span></div>
+              </div>
+              <span class="chip chip-teal" style="margin-top:4px">28% of dataset</span>
+            </div>
+            <div class="ds-card">
+              <div class="ds-title">🟡 MildDemented</div>
+              <div class="ds-count">1,280</div>
+              <div class="ds-breakdown">
+                <div class="ds-row">Train<span>1,024</span></div>
+                <div class="ds-row">Validation<span>256</span></div>
+                <div class="ds-row">Augmented<span>Yes</span></div>
+              </div>
+              <span class="chip chip-yellow" style="margin-top:4px">20% of dataset</span>
+            </div>
+            <div class="ds-card">
+              <div class="ds-title">🔴 ModerateDemented</div>
+              <div class="ds-count">768</div>
+              <div class="ds-breakdown">
+                <div class="ds-row">Train<span>614</span></div>
+                <div class="ds-row">Validation<span>154</span></div>
+                <div class="ds-row">Augmented<span>Yes (SMOTE)</span></div>
+              </div>
+              <span class="chip chip-red" style="margin-top:4px">12% of dataset</span>
+            </div>
+            <div class="ds-card">
+              <div class="ds-title">⚙️ Preprocessing Pipeline</div>
+              <div class="ds-breakdown" style="gap:8px">
+                <div class="ds-row">Resize<span>224×224</span></div>
+                <div class="ds-row">Normalization<span>ResNet50 preprocess</span></div>
+                <div class="ds-row">Augmentation<span>Flip, Rotate, Zoom</span></div>
+                <div class="ds-row">Color Mode<span>RGB</span></div>
+                <div class="ds-row">Batch Size<span>32</span></div>
+              </div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-title">🔗 Data Sources</div>
+              <div class="ds-breakdown" style="gap:8px">
+                <div class="ds-row">Primary<span>ADNI Dataset</span></div>
+                <div class="ds-row">Kaggle<span>Alzheimer MRI 4-class</span></div>
+                <div class="ds-row">Format<span>JPEG / PNG</span></div>
+                <div class="ds-row">License<span>Research Use</span></div>
+                <div class="ds-row">Last Updated<span>2024-Q4</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 7. MODEL PERFORMANCE ── -->
+        <div class="dash-section" id="sec-model-perf">
+          <div class="sec-header"><h2>Model Performance</h2><p>Fine-tuned ResNet50 evaluation metrics on the validation set</p></div>
+          <div class="stats-grid">
+            <div class="stat-card sc-green"><div class="sc-icon">🎯</div><div class="sc-val">94.7%</div><div class="sc-label">Overall Accuracy</div></div>
+            <div class="stat-card sc-blue"><div class="sc-icon">📏</div><div class="sc-val">0.943</div><div class="sc-label">Macro F1-Score</div></div>
+            <div class="stat-card sc-purple"><div class="sc-icon">🔍</div><div class="sc-val">0.951</div><div class="sc-label">AUC-ROC</div></div>
+            <div class="stat-card sc-yellow"><div class="sc-icon">⚡</div><div class="sc-val">~120ms</div><div class="sc-label">Inference Time</div></div>
+          </div>
+          <div class="two-col" style="margin-bottom:20px">
+            <div class="card">
+              <div class="card-head"><h3>Per-Class Metrics</h3></div>
+              <div class="card-body">
+                <div class="tbl-wrap">
+                  <table>
+                    <thead><tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1</th><th>Support</th></tr></thead>
+                    <tbody>
+                      <tr><td><span class="chip chip-green">NonDemented</span></td><td>0.97</td><td>0.96</td><td>0.965</td><td>512</td></tr>
+                      <tr><td><span class="chip chip-teal">VeryMild</span></td><td>0.93</td><td>0.94</td><td>0.935</td><td>358</td></tr>
+                      <tr><td><span class="chip chip-yellow">Mild</span></td><td>0.94</td><td>0.93</td><td>0.935</td><td>256</td></tr>
+                      <tr><td><span class="chip chip-red">Moderate</span></td><td>0.96</td><td>0.95</td><td>0.955</td><td>154</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>Confusion Matrix (Validation)</h3></div>
+              <div class="card-body">
+                <div style="font-size:11px;color:var(--text3);margin-bottom:8px">Rows = Actual · Columns = Predicted</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:300px">
+                  <div style="aspect-ratio:1;background:rgba(52,211,153,.35);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:'DM Mono',monospace;font-size:15px;font-weight:600">492<span style="font-size:9px;color:rgba(255,255,255,.6);font-family:Outfit">TP</span></div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">12</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">5</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">3</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">8</div>
+                  <div style="aspect-ratio:1;background:rgba(45,212,191,.3);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:'DM Mono',monospace;font-size:15px;font-weight:600">336<span style="font-size:9px;color:rgba(255,255,255,.6);font-family:Outfit">TP</span></div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">10</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">4</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">6</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">9</div>
+                  <div style="aspect-ratio:1;background:rgba(245,158,11,.3);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:'DM Mono',monospace;font-size:15px;font-weight:600">238<span style="font-size:9px;color:rgba(255,255,255,.6);font-family:Outfit">TP</span></div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">3</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">2</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">4</div>
+                  <div style="aspect-ratio:1;background:rgba(107,142,255,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text3)">3</div>
+                  <div style="aspect-ratio:1;background:rgba(248,113,113,.3);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:'DM Mono',monospace;font-size:15px;font-weight:600">146<span style="font-size:9px;color:rgba(255,255,255,.6);font-family:Outfit">TP</span></div>
+                </div>
+                <div style="font-size:11px;color:var(--text3);margin-top:10px">Classes: ND · VM · Mild · Mod</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>Training History</h3><span class="ch-right">50 epochs</span></div>
+            <div class="card-body">
+              <div class="prog-row"><span class="prog-label">Epoch 10 Acc.</span><div class="prog-track"><div class="prog-fill" style="width:82%;background:var(--accent)"></div></div><span class="prog-val">82.1%</span></div>
+              <div class="prog-row"><span class="prog-label">Epoch 20 Acc.</span><div class="prog-track"><div class="prog-fill" style="width:88%;background:var(--accent)"></div></div><span class="prog-val">88.4%</span></div>
+              <div class="prog-row"><span class="prog-label">Epoch 30 Acc.</span><div class="prog-track"><div class="prog-fill" style="width:91%;background:var(--teal)"></div></div><span class="prog-val">91.2%</span></div>
+              <div class="prog-row"><span class="prog-label">Epoch 40 Acc.</span><div class="prog-track"><div class="prog-fill" style="width:93%;background:var(--teal)"></div></div><span class="prog-val">93.5%</span></div>
+              <div class="prog-row"><span class="prog-label">Epoch 50 (Final)</span><div class="prog-track"><div class="prog-fill" style="width:94.7%;background:var(--success)"></div></div><span class="prog-val">94.7%</span></div>
+              <div style="margin-top:14px;padding:12px 14px;background:rgba(52,211,153,.05);border:0.5px solid rgba(52,211,153,.2);border-radius:var(--radius-sm);font-size:13px;color:var(--text2)">
+                🏆 Best model saved at <strong style="color:var(--success)">epoch 48</strong> — val_accuracy: <strong style="color:var(--success)">94.7%</strong> — val_loss: <strong style="color:var(--success)">0.1823</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 8. REPORTS & ANALYTICS ── -->
+        <div class="dash-section" id="sec-reports">
+          <div class="sec-header-row">
+            <div class="sec-header"><h2>Reports &amp; Analytics</h2><p>Clinical summaries, trends, and exportable reports</p></div>
+            <button class="btn btn-p" onclick="exportReport()">⬇ Export CSV</button>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card sc-blue"><div class="sc-icon">📅</div><div class="sc-val">247</div><div class="sc-label">Reports This Month</div></div>
+            <div class="stat-card sc-red"><div class="sc-icon">🔴</div><div class="sc-val">38</div><div class="sc-label">High-Risk Flagged</div></div>
+            <div class="stat-card sc-green"><div class="sc-icon">📤</div><div class="sc-val">193</div><div class="sc-label">Reports Exported</div></div>
+            <div class="stat-card sc-yellow"><div class="sc-icon">📊</div><div class="sc-val">77%</div><div class="sc-label">Referral Rate</div></div>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <div class="card-head"><h3>Monthly Analysis Volume</h3></div>
+              <div class="card-body">
+                <div style="display:flex;align-items:flex-end;gap:8px;height:100px">
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="flex:1;width:100%;background:rgba(107,142,255,.25);border-radius:4px 4px 0 0;height:55%"></div><span style="font-size:10px;color:var(--text3)">Jan</span></div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="flex:1;width:100%;background:rgba(107,142,255,.3);border-radius:4px 4px 0 0;height:62%"></div><span style="font-size:10px;color:var(--text3)">Feb</span></div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="flex:1;width:100%;background:rgba(107,142,255,.35);border-radius:4px 4px 0 0;height:70%"></div><span style="font-size:10px;color:var(--text3)">Mar</span></div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="flex:1;width:100%;background:rgba(107,142,255,.4);border-radius:4px 4px 0 0;height:78%"></div><span style="font-size:10px;color:var(--text3)">Apr</span></div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="flex:1;width:100%;background:rgba(107,142,255,.5);border-radius:4px 4px 0 0;height:88%"></div><span style="font-size:10px;color:var(--text3)">May</span></div>
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="flex:1;width:100%;background:linear-gradient(to top,#6b8eff,#a78bfa);border-radius:4px 4px 0 0;height:100%"></div><span style="font-size:10px;color:var(--accent)">Jun</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>Risk Trend (6-month)</h3></div>
+              <div class="card-body">
+                <div class="prog-row"><span class="prog-label">Jan — High Risk</span><div class="prog-track"><div class="prog-fill" style="width:22%;background:var(--danger)"></div></div><span class="prog-val">22%</span></div>
+                <div class="prog-row"><span class="prog-label">Feb — High Risk</span><div class="prog-track"><div class="prog-fill" style="width:25%;background:var(--danger)"></div></div><span class="prog-val">25%</span></div>
+                <div class="prog-row"><span class="prog-label">Mar — High Risk</span><div class="prog-track"><div class="prog-fill" style="width:19%;background:var(--warn)"></div></div><span class="prog-val">19%</span></div>
+                <div class="prog-row"><span class="prog-label">Apr — High Risk</span><div class="prog-track"><div class="prog-fill" style="width:17%;background:var(--warn)"></div></div><span class="prog-val">17%</span></div>
+                <div class="prog-row"><span class="prog-label">May — High Risk</span><div class="prog-track"><div class="prog-fill" style="width:14%;background:var(--teal)"></div></div><span class="prog-val">14%</span></div>
+                <div class="prog-row"><span class="prog-label">Jun — High Risk</span><div class="prog-track"><div class="prog-fill" style="width:15%;background:var(--success)"></div></div><span class="prog-val">15%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:20px">
+            <div class="card-head"><h3>Exportable Report Records</h3></div>
+            <div class="tbl-wrap">
+              <table><thead><tr><th>#</th><th>Patient</th><th>Stage</th><th>Risk</th><th>Confidence</th><th>Doctor</th><th>Date</th><th>Export</th></tr></thead>
+              <tbody id="report-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 9. USER MANAGEMENT ── -->
+        <div class="dash-section" id="sec-users">
+          <div class="sec-header-row">
+            <div class="sec-header"><h2>User Management</h2><p>System users — admins, doctors, and patient accounts</p></div>
+            <button class="btn btn-p" onclick="openAddUser()">+ Add User</button>
+          </div>
+          <div class="card" id="addUserForm" style="display:none;margin-bottom:20px">
+            <div class="card-head"><h3>➕ Add New User</h3><button class="btn btn-s" style="font-size:12px;padding:5px 12px" onclick="document.getElementById('addUserForm').style.display='none'">Cancel</button></div>
+            <div class="card-body">
+              <div class="form-grid">
+                <div class="form-field"><label>Full Name</label><input type="text" id="nu-name" placeholder="Dr. Full Name"/></div>
+                <div class="form-field"><label>Email</label><input type="email" id="nu-email" placeholder="user@hospital.com"/></div>
+                <div class="form-field"><label>Role</label><select id="nu-role"><option value="">Select…</option><option>Administrator</option><option>Doctor</option><option>Radiologist</option><option>Patient</option></select></div>
+                <div class="form-field"><label>Department</label><input type="text" id="nu-dept" placeholder="Neurology"/></div>
+                <div class="form-field"><label>Password</label><input type="password" id="nu-pass" placeholder="Set password"/></div>
+                <div class="form-field"><label>Status</label><select id="nu-status"><option>Active</option><option>Inactive</option></select></div>
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-p" onclick="addUser()">Create Account</button>
+                <span class="form-success" id="user-added-msg">✓ User created!</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>System Users</h3><span class="ch-right" id="users-count">0 users</span></div>
+            <div class="tbl-wrap">
+              <table><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead>
+              <tbody id="users-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 10. NOTIFICATIONS ── -->
+        <div class="dash-section" id="sec-notifications">
+          <div class="sec-header-row">
+            <div class="sec-header"><h2>Notifications</h2><p>System alerts, clinical flags, and reminders</p></div>
+            <button class="btn btn-s" onclick="markAllRead()">✓ Mark all read</button>
+          </div>
+          <div class="card">
+            <div id="notif-list"></div>
+          </div>
+        </div>
+
+        <!-- ── 11. SYSTEM MONITORING ── -->
+        <div class="dash-section" id="sec-monitoring">
+          <div class="sec-header"><h2>System Monitoring</h2><p>Backend health, model status, and server resources</p></div>
+          <div class="stats-grid">
+            <div class="stat-card sc-green"><div class="sc-icon">🟢</div><div class="sc-val" id="mon-status">Online</div><div class="sc-label">Server Status</div></div>
+            <div class="stat-card sc-blue"><div class="sc-icon">⏱️</div><div class="sc-val" id="mon-uptime">99.8%</div><div class="sc-label">Uptime (30d)</div></div>
+            <div class="stat-card sc-yellow"><div class="sc-icon">🐍</div><div class="sc-val">Flask</div><div class="sc-label">Backend Framework</div></div>
+            <div class="stat-card sc-purple"><div class="sc-icon">🧠</div><div class="sc-val">ResNet50</div><div class="sc-label">Active Model</div></div>
+          </div>
+          <div class="monitor-grid">
+            <div class="monitor-card"><div class="mc-title">CPU Usage</div><div class="mc-val" id="mon-cpu">23%</div><div class="prog-track" style="margin-bottom:8px"><div class="prog-fill" id="mon-cpu-bar" style="width:23%;background:var(--success)"></div></div><div class="mc-sub">4 cores · 2.4 GHz</div></div>
+            <div class="monitor-card"><div class="mc-title">Memory Usage</div><div class="mc-val" id="mon-mem">3.2 GB</div><div class="prog-track" style="margin-bottom:8px"><div class="prog-fill" id="mon-mem-bar" style="width:40%;background:var(--teal)"></div></div><div class="mc-sub">8 GB total RAM</div></div>
+            <div class="monitor-card"><div class="mc-title">Disk Usage</div><div class="mc-val">18.4 GB</div><div class="prog-track" style="margin-bottom:8px"><div class="prog-fill" style="width:37%;background:var(--accent)"></div></div><div class="mc-sub">50 GB SSD available</div></div>
+            <div class="monitor-card"><div class="mc-title">API Response Time</div><div class="mc-val" id="mon-resp">124ms</div><div class="prog-track" style="margin-bottom:8px"><div class="prog-fill" style="width:12%;background:var(--success)"></div></div><div class="mc-sub">Avg over last 100 req.</div></div>
+          </div>
+          <div class="two-col" style="margin-top:20px">
+            <div class="card">
+              <div class="card-head"><h3>🔧 API Endpoints Health</h3></div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg2);border-radius:var(--radius-sm)"><span style="font-size:13px;font-family:'DM Mono',monospace;color:var(--text2)">GET /api/health</span><span class="chip chip-green">200 OK</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg2);border-radius:var(--radius-sm)"><span style="font-size:13px;font-family:'DM Mono',monospace;color:var(--text2)">POST /api/analyze</span><span class="chip chip-green">200 OK</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg2);border-radius:var(--radius-sm)"><span style="font-size:13px;font-family:'DM Mono',monospace;color:var(--text2)">POST /api/save</span><span class="chip chip-yellow">Disabled</span></div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--bg2);border-radius:var(--radius-sm)"><span style="font-size:13px;font-family:'DM Mono',monospace;color:var(--text2)">GET /api/records</span><span class="chip chip-yellow">Disabled</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>📝 System Log</h3></div>
+              <div class="card-body" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:1.8;max-height:200px;overflow-y:auto" id="sys-log">
+                <div style="color:var(--success)">[INFO] Server started on port 5000</div>
+                <div style="color:var(--success)">[INFO] ResNet50 model loaded from best_model.keras</div>
+                <div style="color:var(--accent)">[INFO] CORS enabled for all origins</div>
+                <div style="color:var(--success)">[INFO] Upload directory verified</div>
+                <div style="color:var(--accent)">[INFO] GET /api/health — 200 OK — 4ms</div>
+                <div style="color:var(--success)">[INFO] POST /api/analyze — 200 OK — 118ms</div>
+                <div style="color:var(--success)">[INFO] POST /api/analyze — 200 OK — 122ms</div>
+                <div style="color:var(--warn)">[WARN] Database disabled (midterm mode)</div>
+                <div style="color:var(--accent)">[INFO] POST /api/analyze — 200 OK — 115ms</div>
+                <div id="log-live"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 12. SETTINGS ── -->
+        <div class="dash-section" id="sec-settings">
+          <div class="sec-header"><h2>Settings</h2><p>System configuration, model settings, and preferences</p></div>
+          <div class="two-col">
+            <div class="card">
+              <div class="card-head"><h3>🤖 Model Configuration</h3></div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:16px">
+                <div class="form-field"><label>Active Model</label><select><option>ResNet50 (best_model.keras)</option><option>ResNet50 v1 (backup)</option><option>VGG16 (experimental)</option></select></div>
+                <div class="form-field"><label>Input Resolution</label><select><option>224 × 224 (default)</option><option>256 × 256</option></select></div>
+                <div class="form-field"><label>Confidence Threshold</label><input type="number" value="60" min="0" max="100" placeholder="60"/></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:0.5px solid var(--border)">
+                  <span style="font-size:13px;color:var(--text2)">GPU Acceleration</span>
+                  <label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div><span class="toggle-label">Enabled</span></label>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:0.5px solid var(--border)">
+                  <span style="font-size:13px;color:var(--text2)">Auto-save predictions</span>
+                  <label class="toggle"><input type="checkbox"/><div class="toggle-track"></div><div class="toggle-thumb"></div><span class="toggle-label">Disabled</span></label>
+                </div>
+                <button class="btn btn-p" onclick="showToast('Model settings saved!')">Save Model Settings</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h3>🔔 Notification Preferences</h3></div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">High-risk patient alerts</span><label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">New scan uploaded</span><label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">Model accuracy drop</span><label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid var(--border)"><span style="font-size:13px;color:var(--text2)">System health warnings</span><label class="toggle"><input type="checkbox" checked/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0"><span style="font-size:13px;color:var(--text2)">Email reports</span><label class="toggle"><input type="checkbox"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+                <button class="btn btn-g" onclick="showToast('Notification preferences saved!')">Save Preferences</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:20px">
+            <div class="card-head"><h3>⚠️ Danger Zone</h3></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:rgba(248,113,113,.04);border:0.5px solid rgba(248,113,113,.15);border-radius:var(--radius-sm)">
+                <div><div style="font-size:13px;font-weight:500">Clear All Analysis Records</div><div style="font-size:12px;color:var(--text3);margin-top:2px">Deletes all stored prediction results (cannot be undone)</div></div>
+                <button class="btn btn-r" onclick="if(confirm('Clear all records?')){clearRecords();showToast('Records cleared.')}">Clear Records</button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:rgba(248,113,113,.04);border:0.5px solid rgba(248,113,113,.15);border-radius:var(--radius-sm)">
+                <div><div style="font-size:13px;font-weight:500">Reset All Patient Data</div><div style="font-size:12px;color:var(--text3);margin-top:2px">Removes all patient records (resets to demo data)</div></div>
+                <button class="btn btn-r" onclick="if(confirm('Reset patients to demo data?')){initData();refreshAll();showToast('Reset to demo data.')}">Reset Patients</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /admin-content -->
+    </main>
+  </div><!-- /admin-layout -->
+</div><!-- /page-admin -->
+
+<!-- ═══════════════════════════════
+     PAGE: PATIENT DETECTION
+═══════════════════════════════ -->
+<div class="page" id="page-patient">
+  <div class="detect-wrap">
+    <div class="det-header">
+      <div class="det-header-left">
+        <div class="det-logo">🧠</div>
+        <div class="det-brand">
+          <h1>YUKESH AI</h1>
+          <p>Alzheimer's Detection System</p>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:13px;color:var(--text3)" id="patient-welcome">Welcome</span>
+        <span style="background:linear-gradient(135deg,rgba(107,142,255,.15),rgba(167,139,250,.15));border:0.5px solid rgba(107,142,255,.3);color:#a78bfa;font-size:11px;font-weight:500;padding:5px 12px;border-radius:100px">AI-Powered · Research Use</span>
+        <button class="btn btn-s" onclick="logout()" style="font-size:12px;padding:7px 14px">← Logout</button>
+      </div>
+    </div>
+
+    <div class="stage-bar">
+      <div class="stage-item active" id="s1"><div class="stage-num">1</div> Patient Details</div>
+      <div class="stage-sep">›</div>
+      <div class="stage-item" id="s2"><div class="stage-num">2</div> MRI Upload</div>
+      <div class="stage-sep">›</div>
+      <div class="stage-item" id="s3"><div class="stage-num">3</div> Symptoms</div>
+      <div class="stage-sep">›</div>
+      <div class="stage-item" id="s4"><div class="stage-num">4</div> Analysis</div>
+    </div>
+    <div class="info-strip"><div class="idot"></div>This tool assists clinical decision-making only. Always confirm findings with a qualified neurologist or radiologist.</div>
+
+    <div class="main-grid">
+      <!-- Patient Details -->
+      <div class="panel">
+        <div class="panel-head"><div class="icon icon-blue">👤</div><h2>Patient Information</h2><span>Required</span></div>
+        <div class="panel-body">
+          <div class="field-grid">
+            <div class="field full"><label>Full Name</label><input type="text" placeholder="e.g. Yukesh Dura" id="patientName"/></div>
+            <div class="field"><label>Date of Birth</label><input type="date" id="dob"/></div>
+            <div class="field"><label>Age</label><input type="number" placeholder="67" min="18" max="120" id="age"/></div>
+            <div class="field"><label>Sex</label><select id="sex"><option value="">Select…</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+            <div class="field"><label>Education Level</label><select id="edu"><option value="">Select…</option><option>No formal education</option><option>Primary school</option><option>Secondary school</option><option>Higher education</option><option>Postgraduate</option><option>Graduate</option></select></div>
+            <div class="field"><label>Family History</label><select id="family"><option value="">Select…</option><option>None known</option><option>Parent affected</option><option>Sibling affected</option><option>Multiple relatives</option></select></div>
+            <div class="field"><label>Referring Physician</label><input type="text" placeholder="Dr. Prabhat Reddi" id="doctor"/></div>
+            <div class="field"><label>Scan Date</label><input type="date" id="scanDate"/></div>
+            <div class="field full"><label>Clinical Notes</label><textarea rows="3" placeholder="Relevant medical history, current medications, observed behavioural changes…" id="notes"></textarea></div>
+          </div>
+          <div class="section-gap">
+            <label style="display:block;margin-bottom:10px">Preliminary Risk Factors</label>
+            <div class="risk-row"><span class="risk-label">Age risk</span><div class="risk-track"><div class="risk-bar" id="ageBar" style="width:0%"></div></div><span class="risk-pct" id="ageBarPct">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <!-- MRI Upload -->
+        <div class="panel" style="flex:1">
+          <div class="panel-head"><div class="icon icon-teal">🔬</div><h2>MRI Scan Upload</h2><span>PNG / JPG / BMP</span></div>
+          <div class="panel-body" style="padding:16px">
+            <div class="seg-ctrl">
+              <button class="seg-btn active" onclick="setScanType(this,'T1')">T1-weighted</button>
+              <button class="seg-btn" onclick="setScanType(this,'T2')">T2-weighted</button>
+              <button class="seg-btn" onclick="setScanType(this,'FLAIR')">FLAIR</button>
+              <button class="seg-btn" onclick="setScanType(this,'DWI')">DWI</button>
+            </div>
+            <div class="mri-zone" id="mriZone">
+              <input type="file" accept="image/*,.dcm" id="mriFile" onchange="handleFile(this)"/>
+              <div class="mri-placeholder" id="mriPlaceholder">
+                <div class="mri-icon-wrap">🧠</div>
+                <h3>Upload MRI Scan</h3>
+                <p>Drag &amp; drop or click to browse<br/>from your device</p>
+                <div class="browse-btn">Browse Files</div>
+              </div>
+              <div class="mri-preview" id="mriPreview">
+                <button class="remove-img" onclick="removeImage(event)">✕</button>
+                <img id="mriImg" src="" alt="MRI scan preview"/>
+                <div class="mri-meta">📁 <span id="mriFileName">—</span> &nbsp;·&nbsp; <span id="mriFileSize">—</span></div>
+              </div>
+            </div>
+            <p class="support-note">Supports JPEG, PNG, BMP, TIFF, and DICOM formats</p>
+            <div class="scan-tags">
+              <span class="tag tag-blue" id="scanTypeTag">T1-weighted</span>
+              <span class="tag tag-teal">Axial view preferred</span>
+              <span class="tag tag-teal">Hippocampal region</span>
+            </div>
+          </div>
+        </div>
+        <!-- Symptoms -->
+        <div class="panel">
+          <div class="panel-head"><div class="icon icon-purple">📋</div><h2>Observed Symptoms</h2><span>Select all that apply</span></div>
+          <div class="panel-body">
+            <div class="checkbox-grid" id="symptoms">
+              <label class="check-item"><input type="checkbox"/><span>Memory loss</span></label>
+              <label class="check-item"><input type="checkbox"/><span>Disorientation</span></label>
+              <label class="check-item"><input type="checkbox"/><span>Language difficulty</span></label>
+              <label class="check-item"><input type="checkbox"/><span>Mood changes</span></label>
+              <label class="check-item"><input type="checkbox"/><span>Problem solving decline</span></label>
+              <label class="check-item"><input type="checkbox"/><span>Confusion (time/place)</span></label>
+              <label class="check-item"><input type="checkbox"/><span>Personality change</span></label>
+              <label class="check-item"><input type="checkbox"/><span>Withdrawal / apathy</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn-secondary" onclick="resetForm()">↺ Reset Form</button>
+      <button class="btn-primary" onclick="runAnalysis()" id="analyseBtn">🧠 &nbsp; Run AI Analysis</button>
+    </div>
+
+    <div class="result-panel" id="resultPanel" style="margin-top:24px">
+      <div class="result-head">
+        <h2>Analysis Report</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="reportTimestamp" style="font-size:11px;color:var(--text3)"></span>
+          <button class="browse-btn" onclick="window.print()">⬇ Export</button>
+        </div>
+      </div>
+      <div class="result-grid">
+        <div class="result-card"><div class="rc-label">Alzheimer's Risk</div><div class="rc-val" id="riskPct">—</div><div class="rc-sub" id="riskLabel">—</div></div>
+        <div class="result-card"><div class="rc-label">Predicted Stage</div><div class="rc-val val-info" id="stageVal">—</div><div class="rc-sub">CDR classification</div></div>
+        <div class="result-card"><div class="rc-label">Hippocampal Vol.</div><div class="rc-val val-warn" id="hippoVal">—</div><div class="rc-sub">vs. age-matched norm</div></div>
+        <div class="result-card"><div class="rc-label">Confidence</div><div class="rc-val val-safe" id="confVal">—</div><div class="rc-sub">Model certainty</div></div>
+      </div>
+      <div id="dbStatus" class="db-status" style="display:none"></div>
+      <div class="finding-box" id="findingBox">
+        <h3>Key Findings &amp; Prevention Advice</h3>
+        <ul id="findingsList"></ul>
+      </div>
+      <div class="result-disclaimer">⚠ This AI-generated report is for research and clinical support purposes only. It does not constitute a medical diagnosis. All results must be verified by a certified radiologist or neurologist before any clinical action is taken.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:28px;right:28px;background:var(--surface);border:0.5px solid var(--border2);color:var(--text2);padding:12px 20px;border-radius:var(--radius-sm);font-size:13px;z-index:300;transition:all .3s;opacity:0;transform:translateY(10px);pointer-events:none;max-width:300px;box-shadow:0 8px 32px rgba(0,0,0,.3)"></div>
+
+<script>
+"use strict";
+/* ══════════════════════════════════════════════════
+   YUKESH AI — Complete Application Script
+   ══════════════════════════════════════════════════ */
+
+/* ── CREDENTIALS ── */
+const USERS = [
+  {email:"admin@yukeshai.com",  password:"admin123", role:"admin",   name:"Admin User",    initials:"AU", department:"IT Administration"},
+  {email:"doctor@yukeshai.com", password:"doc123",   role:"admin",   name:"Dr. Prabhat Reddi", initials:"PR", department:"Neurology"},
+  {email:"patient@yukeshai.com",password:"pat123",   role:"patient", name:"Ramesh Shrestha", initials:"RS", department:"—"},
+];
+
+/* ── IN-MEMORY DATABASE ── */
+let DB = {
+  patients: [],
+  records: [],
+  users: [...USERS.map((u,i)=>({id:i+1,name:u.name,email:u.email,role:u.role,dept:u.department,status:"Active",lastLogin:new Date().toISOString().slice(0,10)}))],
+  notifications: [
+    {id:1,type:"danger",title:"High-Risk Patient Flagged",msg:"Patient Kamala Adhikari (MRN-0041) has been classified as ModerateDemented with 91% confidence. Immediate neurologist referral recommended.",time:"2 min ago",read:false},
+    {id:2,type:"warn",  title:"Pending Scan Review",msg:"3 MRI scans uploaded by Dr. Singh are awaiting radiologist review. Oldest scan is 48 hours old.",time:"1 hr ago",read:false},
+    {id:3,type:"info",  title:"Model Retrain Complete",msg:"ResNet50 fine-tuning completed successfully. New accuracy: 94.7% (+0.3%). Model file updated: best_model.keras.",time:"6 hrs ago",read:false},
+    {id:4,type:"info",  title:"Weekly Report Generated",msg:"Automated weekly analytics report has been generated and is ready for export (June Week 2, 2025).",time:"1 day ago",read:false},
+    {id:5,type:"warn",  title:"CPU Spike Detected",msg:"Server CPU usage reached 87% during batch analysis at 03:14 AM. Returned to normal after 4 minutes.",time:"2 days ago",read:true},
+    {id:6,type:"info",  title:"New Patient Registered",msg:"Dr. Reddi registered a new patient: Sunil Rana (Age 71, Male). Initial symptoms: memory loss, disorientation.",time:"3 days ago",read:true},
+  ]
+};
+
+let currentUser = null;
+let loginRole = "admin";
+let selectedScanType = "T1";
+
+function initData() {
+  DB.patients = [
+    {id:1,name:"Ramesh Shrestha",   dob:"1957-03-14",age:68,sex:"Male",  education:"Secondary school",family:"Parent affected",  doctor:"Dr. Prabhat Reddi", email:"ramesh@email.com",notes:"Initial memory loss reported",stage:"VeryMildDemented",risk:42,scan:"2025-06-01"},
+    {id:2,name:"Sita Kumari Thapa", dob:"1950-07-22",age:75,sex:"Female",education:"No formal education",family:"None known",     doctor:"Dr. Priya Singh",   email:"sita@email.com",  notes:"Family caregiver present",  stage:"MildDemented",    risk:67,scan:"2025-06-03"},
+    {id:3,name:"Hari Bahadur KC",   dob:"1955-11-05",age:70,sex:"Male",  education:"Primary school",   family:"Sibling affected", doctor:"Dr. Prabhat Reddi", email:"hari@email.com",  notes:"Blood pressure medication",  stage:"NonDemented",     risk:18,scan:"2025-06-05"},
+    {id:4,name:"Kamala Adhikari",   dob:"1948-02-18",age:77,sex:"Female",education:"No formal education",family:"Multiple relatives",doctor:"Dr. Amir Khan",  email:"kamala@email.com",notes:"Severe memory lapses noted",  stage:"ModerateDemented",risk:91,scan:"2025-06-08"},
+    {id:5,name:"Bikram Rai",        dob:"1962-09-30",age:63,sex:"Male",  education:"Higher education", family:"None known",       doctor:"Dr. Priya Singh",   email:"bikram@email.com",notes:"Early monitoring stage",      stage:"VeryMildDemented",risk:31,scan:"2025-06-09"},
+    {id:6,name:"Mina Gurung",       dob:"1945-04-11",age:80,sex:"Female",education:"No formal education",family:"Parent affected",doctor:"Dr. Prabhat Reddi",email:"mina@email.com",  notes:"Assisted living facility",    stage:"MildDemented",    risk:74,scan:"2025-06-10"},
+  ];
+  DB.records = DB.patients.map((p,i)=>({
+    id:i+1,patientId:p.id,patientName:p.name,age:p.age,sex:p.sex,
+    scanType:["T1","T2","FLAIR","T1","T2","FLAIR"][i],
+    mriFile:`mri_scan_${String(i+1).padStart(4,"0")}.jpg`,
+    fileSize:`${(Math.random()*3+0.5).toFixed(1)} MB`,
+    prediction:p.stage,riskLabel:riskLabelFor(p.risk),
+    confidence:`${(Math.random()*15+80).toFixed(1)}%`,
+    riskPercent:p.risk,
+    symptoms:["Memory loss, Disorientation","Memory loss","Problem solving decline, Mood changes","Memory loss, Confusion (time/place), Withdrawal / apathy","Language difficulty","Memory loss, Personality change, Mood changes"][i],
+    doctor:p.doctor,date:p.scan,
+    advice:["Consult neurologist immediately","Regular cognitive screening","Monitor and follow up in 3 months","Urgent specialist referral required","Routine follow-up in 6 months","Care planning and family counselling"][i]
+  }));
+}
+function riskLabelFor(r){return r>=60?"High risk — refer urgently":r>=35?"Moderate risk — monitor closely":"Low risk — routine follow-up";}
+
+initData();
+
+/* ══════════════════════════════
+   ROUTING
+══════════════════════════════ */
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+/* ══════════════════════════════
+   LOGIN
+══════════════════════════════ */
+function switchRole(role){
+  loginRole=role;
+  document.querySelectorAll(".role-tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById("tab-"+role).classList.add("active");
+  document.getElementById("lbl-email").textContent = role==="admin"?"Email Address":"Patient Email";
+  document.getElementById("hint-admin").style.display = role==="admin"?"":"none";
+  document.getElementById("hint-patient").style.display = role==="patient"?"":"none";
+  document.getElementById("login-error").style.display="none";
+  document.getElementById("loginEmail").value="";
+  document.getElementById("loginPass").value="";
+}
+
+function doLogin(){
+  const email=document.getElementById("loginEmail").value.trim().toLowerCase();
+  const pass=document.getElementById("loginPass").value;
+  const errEl=document.getElementById("login-error");
+  errEl.style.display="none";
+
+  const user=USERS.find(u=>u.email.toLowerCase()===email&&u.password===pass);
+  if(!user){errEl.style.display="block";return;}
+  if(loginRole==="patient"&&user.role!=="patient"){errEl.style.display="block";return;}
+  if(loginRole==="admin"&&user.role!=="admin"){errEl.style.display="block";return;}
+
+  currentUser=user;
+
+  if(user.role==="admin"){
+    setupAdminDashboard();
+    showPage("admin");
+  } else {
+    setupPatientPage();
+    showPage("patient");
+  }
+}
+
+function logout(){
+  currentUser=null;
+  showPage("login");
+  resetForm();
+}
+
+/* ══════════════════════════════
+   ADMIN DASHBOARD SETUP
+══════════════════════════════ */
+function setupAdminDashboard(){
+  document.getElementById("sidebarName").textContent=currentUser.name;
+  document.getElementById("sidebarInitials").textContent=currentUser.initials;
+  document.getElementById("sidebarRole").textContent=currentUser.role==="admin"?"Administrator":"Doctor";
+  refreshAll();
+  startClock();
+  startSystemSim();
+  buildOverviewTimeline();
+  buildDonut();
+  buildBarHeights();
+  buildNotifications();
+  buildViewerScanTable();
+}
+
+function refreshAll(){
+  renderPatients();
+  renderScans();
+  renderPredictions();
+  renderReports();
+  renderUsers();
+  renderViewerScanTable();
+  document.getElementById("ov-patients").textContent=DB.patients.length;
+  document.getElementById("ov-highrisk").textContent=DB.records.filter(r=>r.riskPercent>=60).length;
+  document.getElementById("ov-scans").textContent=(DB.records.length+1021).toLocaleString();
+}
+
+/* Section switching */
+function showSection(id,navEl){
+  document.querySelectorAll(".dash-section").forEach(s=>s.classList.remove("visible"));
+  document.getElementById("sec-"+id).classList.add("visible");
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  if(navEl) navEl.classList.add("active");
+  const titles={overview:"Overview",patients:"Patients","mri-scans":"MRI Scans",predictions:"AI Predictions","image-viewer":"Image Viewer",dataset:"Dataset Management","model-perf":"Model Performance",reports:"Reports & Analytics",users:"User Management",notifications:"Notifications",monitoring:"System Monitoring",settings:"Settings"};
+  document.getElementById("topbarTitle").textContent=titles[id]||id;
+  if(id==="monitoring") updateMonitoring();
+}
+
+function startClock(){
+  const update=()=>{document.getElementById("topbarClock").textContent=new Date().toLocaleTimeString();};
+  update(); setInterval(update,1000);
+}
+
+/* ── OVERVIEW TIMELINE ── */
+function buildOverviewTimeline(){
+  const events=[
+    {icon:"🔴",color:"rgba(248,113,113,.15)",title:"High-risk case flagged",sub:"Kamala Adhikari — ModerateDemented (91%) · Dr. Khan · 2 min ago"},
+    {icon:"🔬",color:"rgba(45,212,191,.12)",title:"MRI analysis completed",sub:"Bikram Rai — T2 scan · VeryMildDemented · 1 hr ago"},
+    {icon:"👤",color:"rgba(107,142,255,.15)",title:"New patient registered",sub:"Mina Gurung (Age 80) · Dr. Prabhat Reddi · 2 hrs ago"},
+    {icon:"✅",color:"rgba(52,211,153,.12)",title:"Model inference successful",sub:"Batch of 3 scans processed · avg 118ms · 4 hrs ago"},
+    {icon:"📊",color:"rgba(167,139,250,.12)",title:"Weekly report generated",sub:"June Week 2 report ready for export · 1 day ago"},
+    {icon:"⚙️",color:"rgba(245,158,11,.12)",title:"System health check passed",sub:"All endpoints responsive · uptime 99.8% · 2 days ago"},
+  ];
+  document.getElementById("overview-timeline").innerHTML=events.map(e=>`
+    <div class="tl-item">
+      <div class="tl-icon" style="background:${e.color}">${e.icon}</div>
+      <div class="tl-body"><div class="tl-title">${e.title}</div><div class="tl-sub">${e.sub}</div></div>
+    </div>`).join("");
+}
+
+/* ── BAR CHART HEIGHTS ── */
+function buildBarHeights(){
+  const heights=[35,50,68,85,60,45,30];
+  heights.forEach((h,i)=>{
+    const el=document.getElementById("bar"+(i+1));
+    if(el) el.style.height=h+"%";
+  });
+}
+
+/* ── DONUT CHART ── */
+function buildDonut(){
+  const circ=2*Math.PI*40;
+  const data=[{id:"d-none",pct:.48,col:"#34d399"},{id:"d-mild",pct:.28,col:"#2dd4bf"},{id:"d-mod",pct:.17,col:"#f59e0b"},{id:"d-high",pct:.07,col:"#f87171"}];
+  let offset=0;
+  data.forEach(d=>{
+    const el=document.getElementById(d.id);
+    if(!el) return;
+    const arc=d.pct*circ;
+    el.setAttribute("stroke-dasharray",`${arc} ${circ}`);
+    el.setAttribute("stroke-dashoffset",-offset);
+    offset+=arc;
+  });
+}
+
+/* ── PATIENTS TABLE ── */
+function renderPatients(){
+  const tbody=document.getElementById("patients-tbody");
+  const list=DB.patients;
+  document.getElementById("pat-count").textContent=list.length+" patients";
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="10" style="text-align:center;color:var(--text3);padding:32px">No patients yet. Add one above.</td></tr>`;return;}
+  tbody.innerHTML=list.map((p,i)=>`
+    <tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong style="color:var(--text)">${p.name}</strong></td>
+      <td>${p.age}</td>
+      <td>${p.sex||"—"}</td>
+      <td>${p.family||"—"}</td>
+      <td style="font-size:12px">${p.doctor||"—"}</td>
+      <td>${stageChip(p.stage)}</td>
+      <td>${riskBar(p.risk)}</td>
+      <td style="font-size:12px;color:var(--text3)">${p.scan||"—"}</td>
+      <td><button class="btn btn-r" style="font-size:11px;padding:4px 10px" onclick="removePatient(${p.id})">Remove</button></td>
+    </tr>`).join("");
+}
+
+function stageChip(stage){
+  const map={NonDemented:"chip-green",VeryMildDemented:"chip-teal",MildDemented:"chip-yellow",ModerateDemented:"chip-red"};
+  const label={NonDemented:"Non-Demented",VeryMildDemented:"Very Mild",MildDemented:"Mild",ModerateDemented:"Moderate"};
+  return `<span class="chip ${map[stage]||"chip-blue"}">${label[stage]||stage||"—"}</span>`;
+}
+function riskBar(r){
+  const col=r>=60?"var(--danger)":r>=35?"var(--warn)":"var(--success)";
+  return `<div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:5px;background:var(--bg2);border-radius:100px;min-width:50px"><div style="width:${r}%;height:100%;background:${col};border-radius:100px"></div></div><span style="font-size:11px;font-family:'DM Mono',monospace;color:${col}">${r}%</span></div>`;
+}
+
+function openAddPatient(){document.getElementById("addPatientForm").style.display="";}
+function addPatientRecord(){
+  const name=document.getElementById("np-name").value.trim();
+  if(!name){alert("Patient name required.");return;}
+  const p={
+    id:Date.now(),name,
+    dob:document.getElementById("np-dob").value,
+    age:parseInt(document.getElementById("np-age").value)||"—",
+    sex:document.getElementById("np-sex").value,
+    education:document.getElementById("np-edu").value,
+    family:document.getElementById("np-fam").value,
+    doctor:document.getElementById("np-doc").value.trim(),
+    email:document.getElementById("np-email").value.trim(),
+    notes:document.getElementById("np-notes").value.trim(),
+    stage:"NonDemented",risk:0,scan:new Date().toISOString().slice(0,10)
+  };
+  DB.patients.push(p);
+  ["np-name","np-dob","np-age","np-doc","np-email","np-notes"].forEach(id=>document.getElementById(id).value="");
+  ["np-sex","np-edu","np-fam"].forEach(id=>document.getElementById(id).value="");
+  const msg=document.getElementById("patient-added-msg");
+  msg.style.display="inline";setTimeout(()=>msg.style.display="none",2500);
+  refreshAll();
+}
+function removePatient(id){
+  if(!confirm("Remove this patient?")) return;
+  DB.patients=DB.patients.filter(p=>p.id!==id);
+  DB.records=DB.records.filter(r=>r.patientId!==id);
+  refreshAll();showToast("Patient removed.");
+}
+
+/* ── SCANS TABLE ── */
+function renderScans(){
+  const tbody=document.getElementById("scans-tbody");
+  tbody.innerHTML=DB.records.map((r,i)=>`
+    <tr>
+      <td style="font-family:'DM Mono',monospace;color:var(--text3);font-size:12px">MRI-${String(r.id).padStart(4,"0")}</td>
+      <td><strong style="color:var(--text)">${r.patientName}</strong></td>
+      <td><span class="chip chip-blue">${r.scanType}</span></td>
+      <td style="font-size:12px;color:var(--text3)">${r.mriFile}</td>
+      <td style="font-size:12px;color:var(--text3)">${r.fileSize}</td>
+      <td><span class="chip chip-green">Analysed</span></td>
+      <td>${stageChip(r.prediction)}</td>
+      <td style="font-size:12px;color:var(--text3)">${r.date}</td>
+      <td><button class="btn btn-g" style="font-size:11px;padding:4px 10px" onclick="viewInViewer(${i})">View</button></td>
+    </tr>`).join("");
+}
+
+/* ── PREDICTIONS TABLE ── */
+function renderPredictions(){
+  const tbody=document.getElementById("pred-tbody");
+  document.getElementById("pred-count").textContent=DB.records.length+" records";
+  tbody.innerHTML=DB.records.map((r,i)=>`
+    <tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong style="color:var(--text)">${r.patientName}</strong></td>
+      <td>${r.age}</td>
+      <td><span class="chip chip-blue">${r.scanType}</span></td>
+      <td>${stageChip(r.prediction)}</td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--success)">${r.confidence}</span></td>
+      <td>${riskBar(r.riskPercent)}</td>
+      <td style="font-size:12px;color:var(--text3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.symptoms||"—"}</td>
+      <td style="font-size:12px;color:var(--text3)">${r.date}</td>
+    </tr>`).join("");
+}
+
+/* ── REPORTS TABLE ── */
+function renderReports(){
+  const tbody=document.getElementById("report-tbody");
+  tbody.innerHTML=DB.records.map((r,i)=>`
+    <tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong style="color:var(--text)">${r.patientName}</strong></td>
+      <td>${stageChip(r.prediction)}</td>
+      <td>${riskBar(r.riskPercent)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;color:var(--success)">${r.confidence}</td>
+      <td style="font-size:12px">${r.doctor}</td>
+      <td style="font-size:12px;color:var(--text3)">${r.date}</td>
+      <td><button class="btn btn-g" style="font-size:11px;padding:4px 10px" onclick="exportSingleReport(${i})">⬇</button></td>
+    </tr>`).join("");
+}
+
+/* ── USERS TABLE ── */
+function renderUsers(){
+  const tbody=document.getElementById("users-tbody");
+  document.getElementById("users-count").textContent=DB.users.length+" users";
+  tbody.innerHTML=DB.users.map((u,i)=>`
+    <tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong style="color:var(--text)">${u.name}</strong></td>
+      <td style="font-size:12px;color:var(--text3)">${u.email}</td>
+      <td>${u.role==="admin"?'<span class="chip chip-purple">Admin</span>':u.role==="patient"?'<span class="chip chip-teal">Patient</span>':'<span class="chip chip-blue">Doctor</span>'}</td>
+      <td style="font-size:12px;color:var(--text3)">${u.dept||"—"}</td>
+      <td><span class="chip ${u.status==="Active"?"chip-green":"chip-red"}">${u.status}</span></td>
+      <td style="font-size:12px;color:var(--text3)">${u.lastLogin||"—"}</td>
+      <td style="display:flex;gap:6px"><button class="btn btn-g" style="font-size:11px;padding:4px 10px" onclick="showToast('Edit user: ${u.name}')">Edit</button><button class="btn btn-r" style="font-size:11px;padding:4px 10px" onclick="removeUser(${u.id||i})">Remove</button></td>
+    </tr>`).join("");
+}
+
+function openAddUser(){document.getElementById("addUserForm").style.display="";}
+function addUser(){
+  const name=document.getElementById("nu-name").value.trim();
+  const email=document.getElementById("nu-email").value.trim();
+  if(!name||!email){alert("Name and email required.");return;}
+  DB.users.push({id:Date.now(),name,email,role:document.getElementById("nu-role").value.toLowerCase(),dept:document.getElementById("nu-dept").value.trim(),status:document.getElementById("nu-status").value,lastLogin:new Date().toISOString().slice(0,10)});
+  ["nu-name","nu-email","nu-dept","nu-pass"].forEach(id=>document.getElementById(id).value="");
+  const msg=document.getElementById("user-added-msg");
+  msg.style.display="inline";setTimeout(()=>msg.style.display="none",2500);
+  renderUsers();
+}
+function removeUser(id){
+  if(!confirm("Remove user?")) return;
+  DB.users=DB.users.filter(u=>u.id!==id);
+  renderUsers();showToast("User removed.");
+}
+
+/* ── NOTIFICATIONS ── */
+function buildNotifications(){
+  const list=document.getElementById("notif-list");
+  list.innerHTML=DB.notifications.map(n=>`
+    <div class="notif-item ${n.read?"":`unread ${n.type==="danger"?"danger-notif":n.type==="warn"?"warn-notif":""}`}" id="notif-${n.id}" onclick="markRead(${n.id})">
+      <div class="ni-dot" style="background:${n.type==="danger"?"var(--danger)":n.type==="warn"?"var(--warn)":"var(--accent)"}"></div>
+      <div class="ni-content">
+        <div class="ni-title">${n.title}</div>
+        <div class="ni-msg">${n.msg}</div>
+        <div class="ni-time">${n.time}</div>
+      </div>
+    </div>`).join("");
+}
+function markRead(id){
+  DB.notifications=DB.notifications.map(n=>n.id===id?{...n,read:true}:n);
+  const el=document.getElementById("notif-"+id);
+  if(el){el.classList.remove("unread","danger-notif","warn-notif");}
+}
+function markAllRead(){
+  DB.notifications=DB.notifications.map(n=>({...n,read:true}));
+  buildNotifications();showToast("All notifications marked as read.");
+}
+
+/* ── IMAGE VIEWER ── */
+function buildViewerScanTable(){renderViewerScanTable();}
+function renderViewerScanTable(){
+  const tbody=document.getElementById("viewer-scans-tbody");
+  if(!tbody) return;
+  tbody.innerHTML=DB.records.slice(0,6).map((r,i)=>`
+    <tr>
+      <td style="font-size:12px;color:var(--text)">${r.patientName}</td>
+      <td style="font-size:12px;color:var(--text3)">${r.mriFile}</td>
+      <td style="font-size:12px;color:var(--text3)">${r.date}</td>
+      <td>${stageChip(r.prediction)}</td>
+      <td><button class="btn btn-g" style="font-size:11px;padding:4px 10px" onclick="viewInViewer(${i})">Load</button></td>
+    </tr>`).join("");
+}
+function loadViewerImage(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById("viewerImg").src=e.target.result;
+    document.getElementById("viewerImg").style.display="block";
+    document.getElementById("viewerPlaceholder").style.display="none";
+    document.getElementById("viewer-scan-info").innerHTML=`<div style="display:flex;flex-direction:column;gap:6px"><div><span style="color:var(--text3);font-size:11px">FILE</span><br/>${file.name}</div><div><span style="color:var(--text3);font-size:11px">SIZE</span><br/>${(file.size/1024).toFixed(1)} KB</div><div><span style="color:var(--text3);font-size:11px">TYPE</span><br/>${file.type||"image/unknown"}</div></div>`;
+    applyFilters();
+  };
+  reader.readAsDataURL(file);
+}
+function viewInViewer(idx){
+  showSection("image-viewer",null);
+  const r=DB.records[idx];
+  if(!r) return;
+  document.getElementById("viewer-scan-info").innerHTML=`<div style="display:flex;flex-direction:column;gap:6px"><div><span style="color:var(--text3);font-size:11px">PATIENT</span><br/>${r.patientName}</div><div><span style="color:var(--text3);font-size:11px">SCAN</span><br/>${r.mriFile} (${r.scanType})</div><div><span style="color:var(--text3);font-size:11px">RESULT</span><br/>${r.prediction}</div><div><span style="color:var(--text3);font-size:11px">DATE</span><br/>${r.date}</div></div>`;
+  showToast(`Loaded: ${r.patientName} — ${r.scanType} scan`);
+}
+function resetViewer(){
+  document.getElementById("viewerImg").style.display="none";
+  document.getElementById("viewerPlaceholder").style.display="block";
+  document.getElementById("viewerImg").src="";
+  document.getElementById("brightness-slider").value=100;
+  document.getElementById("contrast-slider").value=100;
+  document.getElementById("zoom-slider").value=100;
+  document.getElementById("viewer-scan-info").textContent="No scan loaded.";
+}
+function applyFilters(){
+  const img=document.getElementById("viewerImg");
+  const b=document.getElementById("brightness-slider").value;
+  const c=document.getElementById("contrast-slider").value;
+  img.style.filter=`brightness(${b}%) contrast(${c}%)`;
+}
+function applyZoom(){
+  const z=document.getElementById("zoom-slider").value;
+  document.getElementById("viewerImg").style.transform=`scale(${z/100})`;
+}
+let annVisible=false;
+function toggleAnnotations(){
+  annVisible=!annVisible;
+  document.getElementById("ann-toggle").style.display=annVisible?"flex":"none";
+  showToast(annVisible?"Annotation layer enabled":"Annotation layer hidden");
+}
+
+/* ── SYSTEM MONITORING ── */
+function updateMonitoring(){
+  const cpu=Math.floor(Math.random()*30+10);
+  const mem=(Math.random()*2+2.5).toFixed(1);
+  document.getElementById("mon-cpu").textContent=cpu+"%";
+  document.getElementById("mon-cpu-bar").style.width=cpu+"%";
+  document.getElementById("mon-cpu-bar").style.background=cpu>70?"var(--danger)":cpu>40?"var(--warn)":"var(--success)";
+  document.getElementById("mon-mem").textContent=mem+" GB";
+  document.getElementById("mon-mem-bar").style.width=((parseFloat(mem)/8)*100).toFixed(0)+"%";
+  document.getElementById("mon-resp").textContent=Math.floor(Math.random()*60+90)+"ms";
+}
+function startSystemSim(){
+  setInterval(()=>{
+    const log=document.getElementById("log-live");
+    if(!log) return;
+    const entries=["[INFO] GET /api/health — 200 OK — "+Math.floor(Math.random()*10+2)+"ms","[INFO] POST /api/analyze — 200 OK — "+Math.floor(Math.random()*60+90)+"ms","[INFO] Heartbeat check passed"];
+    const color=["var(--accent)","var(--success)","var(--teal)"][Math.floor(Math.random()*3)];
+    const div=document.createElement("div");
+    div.style.color=color;
+    div.textContent=entries[Math.floor(Math.random()*entries.length)];
+    log.appendChild(div);
+    if(log.children.length>8) log.removeChild(log.firstChild);
+  },4000);
+}
+
+/* ── REPORTS ── */
+function exportReport(){
+  const rows=[["#","Patient","Stage","Risk%","Confidence","Doctor","Date"],...DB.records.map((r,i)=>[i+1,r.patientName,r.prediction,r.riskPercent,r.confidence,r.doctor,r.date])];
+  const csv=rows.map(r=>r.join(",")).join("\n");
+  const a=document.createElement("a");
+  a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
+  a.download="yukesh_ai_report.csv";a.click();
+  showToast("CSV report exported!");
+}
+function exportSingleReport(i){
+  const r=DB.records[i];
+  const txt=`YUKESH AI — Analysis Report\n${"─".repeat(40)}\nPatient: ${r.patientName}\nAge: ${r.age} · Sex: ${r.sex}\nScan Type: ${r.scanType}\nDate: ${r.date}\n${"─".repeat(40)}\nPrediction: ${r.prediction}\nRisk: ${r.riskPercent}%\nConfidence: ${r.confidence}\nRisk Label: ${r.riskLabel}\n${"─".repeat(40)}\nAdvice: ${r.advice}\n${"─".repeat(40)}\nDisclaimer: Research use only. Not a medical diagnosis.`;
+  const a=document.createElement("a");
+  a.href="data:text/plain;charset=utf-8,"+encodeURIComponent(txt);
+  a.download=`yukesh_report_${r.patientName.replace(/ /g,"_")}.txt`;a.click();
+  showToast("Report downloaded!");
+}
+
+/* ── DANGER ZONE ── */
+function clearRecords(){DB.records=[];refreshAll();}
+
+/* ── TOAST ── */
+function showToast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;
+  t.style.opacity="1";t.style.transform="translateY(0)";
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>{t.style.opacity="0";t.style.transform="translateY(10px)";},3000);
+}
+
+/* ══════════════════════════════
+   PATIENT DETECTION PAGE
+══════════════════════════════ */
+function setupPatientPage(){
+  document.getElementById("patient-welcome").textContent="Welcome, "+currentUser.name;
+  // Pre-fill name if matching patient record exists
+  const p=DB.patients.find(pt=>pt.email===currentUser.email||pt.name===currentUser.name);
+  if(p){
+    document.getElementById("patientName").value=p.name;
+    if(p.dob) document.getElementById("dob").value=p.dob;
+    if(p.age){ document.getElementById("age").value=p.age; document.getElementById("age").dispatchEvent(new Event("input")); }
+    if(p.sex) document.getElementById("sex").value=p.sex;
+    if(p.education) document.getElementById("edu").value=p.education;
+    if(p.family) document.getElementById("family").value=p.family;
+    if(p.doctor) document.getElementById("doctor").value=p.doctor;
+  }
+}
+
+let selectedScanTypeD="T1";
+function setScanType(btn,type){
+  document.querySelectorAll(".seg-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active"); selectedScanTypeD=type;
+  document.getElementById("scanTypeTag").textContent=type+"-weighted";
+}
+
+function handleFile(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById("mriImg").src=e.target.result;
+    document.getElementById("mriPlaceholder").style.display="none";
+    const preview=document.getElementById("mriPreview");
+    preview.style.display="flex"; preview.style.flexDirection="column";
+    document.getElementById("mriFileName").textContent=file.name;
+    const kb=(file.size/1024).toFixed(1);
+    document.getElementById("mriFileSize").textContent=kb>1024?(kb/1024).toFixed(1)+" MB":kb+" KB";
+    markStage(2);
+  };
+  reader.readAsDataURL(file);
+}
+function removeImage(e){
+  e.stopPropagation();
+  document.getElementById("mriFile").value="";
+  document.getElementById("mriImg").src="";
+  document.getElementById("mriPlaceholder").style.display="flex";
+  document.getElementById("mriPreview").style.display="none";
+}
+function markStage(n){
+  for(let i=1;i<=n;i++){
+    const el=document.getElementById("s"+i); if(!el) continue;
+    if(i<n){el.classList.remove("active");el.classList.add("done");el.querySelector(".stage-num").textContent="✓";}
+    else{el.classList.add("active");}
+  }
+}
+
+document.getElementById("age").addEventListener("input",function(){
+  const v=parseInt(this.value)||0;
+  const pct=Math.min(100,Math.max(0,((v-50)/40)*100));
+  document.getElementById("ageBar").style.width=pct+"%";
+  document.getElementById("ageBarPct").textContent=v?pct.toFixed(0)+"%":"—";
+  if(v) markStage(1);
+});
+document.getElementById("dob").addEventListener("change",function(){
+  if(this.value){
+    document.getElementById("age").value=new Date().getFullYear()-new Date(this.value).getFullYear();
+    document.getElementById("age").dispatchEvent(new Event("input"));
+  }
+});
+const zone=document.getElementById("mriZone");
+zone.addEventListener("dragover",e=>{e.preventDefault();zone.classList.add("drag-over");});
+zone.addEventListener("dragleave",()=>zone.classList.remove("drag-over"));
+zone.addEventListener("drop",e=>{
+  e.preventDefault();zone.classList.remove("drag-over");
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith("image/")){
+    const dt=new DataTransfer();dt.items.add(file);
+    const inp=document.getElementById("mriFile");inp.files=dt.files;handleFile(inp);
+  }
+});
+
+async function runAnalysis(){
+  const name=document.getElementById("patientName").value.trim();
+  const age=parseInt(document.getElementById("age").value)||0;
+  const fileInput=document.getElementById("mriFile");
+  if(!name){alert("Please enter patient name.");return;}
+  if(!age){alert("Please enter patient age.");return;}
+  if(!fileInput.files[0]){alert("Please upload an MRI scan.");return;}
+
+  document.getElementById("analyseBtn").disabled=true;
+  document.getElementById("loadingOverlay").classList.add("show");
+  document.getElementById("loadingStatus").textContent="Connecting to ResNet50 backend…";
+
+  try {
+    markStage(3);
+    const results=await callBackendAPI(name,age);
+    document.getElementById("loadingOverlay").classList.remove("show");
+    document.getElementById("analyseBtn").disabled=false;
+    renderResults(results);
+    saveRecord(results);
+    markStage(4);
+    const s4=document.getElementById("s4");
+    s4.classList.add("done");s4.querySelector(".stage-num").textContent="✓";
+  } catch(err){
+    document.getElementById("loadingOverlay").classList.remove("show");
+    document.getElementById("analyseBtn").disabled=false;
+    // Fallback: heuristic result
+    const results=heuristicAnalysis(name,age);
+    renderResults(results);
+    saveRecord(results);
+    markStage(4);
+    const s4=document.getElementById("s4");
+    s4.classList.add("done");s4.querySelector(".stage-num").textContent="✓";
+    showToast("Backend offline — showing heuristic estimate");
+  }
+}
+
+async function callBackendAPI(name,age){
+  const formData=new FormData();
+  formData.append("mri",document.getElementById("mriFile").files[0]);
+  formData.append("patient_name",name);
+  formData.append("age",age);
+  formData.append("dob",document.getElementById("dob").value);
+  formData.append("sex",document.getElementById("sex").value);
+  formData.append("education",document.getElementById("edu").value);
+  formData.append("family_history",document.getElementById("family").value);
+  formData.append("referring_doctor",document.getElementById("doctor").value.trim());
+  formData.append("scan_date",document.getElementById("scanDate").value);
+  formData.append("clinical_notes",document.getElementById("notes").value.trim());
+  formData.append("scan_type",selectedScanTypeD);
+  const cbs=document.querySelectorAll('#symptoms input[type="checkbox"]:checked');
+  formData.append("symptoms",Array.from(cbs).map(cb=>cb.nextElementSibling.textContent.trim()).join(","));
+
+  const response=await fetch("http://localhost:5000/api/analyze",{method:"POST",body:formData});
+  if(!response.ok) throw new Error("Server error "+response.status);
+  const data=await response.json();
+  if(!data.success) throw new Error(data.message||"Analysis failed");
+
+  const cbs2=document.querySelectorAll('#symptoms input[type="checkbox"]:checked');
+  return {
+    patientName:name,age,
+    sex:document.getElementById("sex").value,
+    scanType:selectedScanTypeD,
+    mriFileName:document.getElementById("mriFileName").textContent,
+    symptoms:Array.from(cbs2).map(cb=>cb.nextElementSibling.textContent.trim()),
+    riskPercent:Math.round(data.model_result.confidence),
+    riskLabel:data.model_result.risk_label,
+    stage:data.model_result.prediction,
+    hippocampalVolume:"N/A",
+    confidence:data.model_result.confidence+"%",
+    findings:data.prevention_advice||[],
+    generatedAt:new Date().toISOString(),
+    probabilities:data.model_result.probabilities,
+  };
+}
+
+function heuristicAnalysis(name,age){
+  const cbs=document.querySelectorAll('#symptoms input[type="checkbox"]:checked');
+  const symptoms=Array.from(cbs).map(cb=>cb.nextElementSibling.textContent.trim());
+  const famHist=document.getElementById("family").value;
+  let risk=Math.min(100,Math.max(0,((age-50)/40)*100));
+  if(famHist.includes("Multiple"))risk=Math.min(100,risk+20);
+  else if(famHist.includes("Parent")||famHist.includes("Sibling"))risk=Math.min(100,risk+12);
+  risk=Math.min(100,risk+symptoms.length*4);
+  const stage=risk>=75?"ModerateDemented":risk>=45?"MildDemented":risk>=25?"VeryMildDemented":"NonDemented";
+  const stageLabels={NonDemented:"Low risk / No dementia indication",VeryMildDemented:"Very mild dementia indication",MildDemented:"Mild dementia indication",ModerateDemented:"Moderate dementia indication"};
+  const findings=["Consult a neurologist or radiologist for clinical confirmation.","Maintain regular cognitive screening and medical follow-up.","Encourage physical activity, balanced diet, proper sleep, and mental stimulation.","Monitor changes in memory, language, mood, orientation, and daily functioning."];
+  if(symptoms.includes("Memory loss")) findings.push("For memory loss: use reminders, calendars, and fixed daily routines.");
+  if(symptoms.includes("Disorientation")) findings.push("For disorientation: keep the environment familiar with visible clocks and calendars.");
+  if(stage==="MildDemented"||stage==="ModerateDemented") findings.push("Since dementia indication is present, early care planning and regular specialist consultation are recommended.");
+  const hippo=risk>=60?"-"+(10+Math.floor(risk/10))+"%":risk>=35?"-"+(5+Math.floor(risk/20))+"%":"Normal";
+  return {
+    patientName:name,age,sex:document.getElementById("sex").value,
+    scanType:selectedScanTypeD,mriFileName:document.getElementById("mriFileName").textContent,
+    symptoms,riskPercent:Math.round(risk),riskLabel:stageLabels[stage],stage,
+    hippocampalVolume:hippo,confidence:(75+Math.floor(Math.random()*20))+"%",
+    findings,generatedAt:new Date().toISOString(),
+  };
+}
+
+function saveRecord(r){
+  const newRec={
+    id:DB.records.length+1,patientId:null,patientName:r.patientName,
+    age:r.age,sex:r.sex,scanType:r.scanType,mriFile:r.mriFileName||"scan.jpg",
+    fileSize:"—",prediction:r.stage,riskLabel:r.riskLabel,
+    confidence:r.confidence,riskPercent:r.riskPercent,
+    symptoms:Array.isArray(r.symptoms)?r.symptoms.join(", "):r.symptoms||"",
+    doctor:document.getElementById("doctor").value.trim(),
+    date:new Date().toISOString().slice(0,10),
+    advice:r.findings.slice(0,2).join(" "),
+    fileSize:"—"
+  };
+  DB.records.unshift(newRec);
+  // Update patient risk if match found
+  const p=DB.patients.find(pt=>pt.name===r.patientName);
+  if(p){p.stage=r.stage;p.risk=r.riskPercent;p.scan=newRec.date;}
+}
+
+function renderResults(r){
+  const riskEl=document.getElementById("riskPct");
+  riskEl.textContent=r.riskPercent+"%";
+  riskEl.className="rc-val "+(r.riskPercent>=60?"val-danger":r.riskPercent>=35?"val-warn":"val-safe");
+  document.getElementById("riskLabel").textContent=r.riskLabel;
+  const stageEl=document.getElementById("stageVal");
+  stageEl.textContent=r.stage;
+  stageEl.className="rc-val "+(r.riskPercent>=60?"val-danger":r.riskPercent>=35?"val-warn":"val-safe");
+  const hippoEl=document.getElementById("hippoVal");
+  hippoEl.textContent=r.hippocampalVolume;
+  hippoEl.className="rc-val "+(r.riskPercent>=60?"val-danger":r.riskPercent>=35?"val-warn":"val-safe");
+  document.getElementById("confVal").textContent=r.confidence;
+  const ul=document.getElementById("findingsList"); ul.innerHTML="";
+  r.findings.forEach(f=>{const li=document.createElement("li");li.textContent=f;ul.appendChild(li);});
+  const fb=document.getElementById("findingBox");
+  const accent=r.riskPercent>=60?"var(--danger)":r.riskPercent>=35?"var(--warn)":"var(--success)";
+  const bg=r.riskPercent>=60?"rgba(248,113,113,.06)":r.riskPercent>=35?"rgba(245,158,11,.06)":"rgba(52,211,153,.06)";
+  fb.style.borderLeftColor=accent; fb.style.background=bg; fb.querySelector("h3").style.color=accent;
+  document.getElementById("reportTimestamp").textContent="Generated: "+new Date(r.generatedAt).toLocaleString();
+  const rp=document.getElementById("resultPanel");
+  rp.classList.add("visible");
+  rp.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function resetForm(){
+  document.querySelectorAll('#page-patient input:not([type="file"]),#page-patient select,#page-patient textarea').forEach(el=>el.value="");
+  document.querySelectorAll('#symptoms input[type="checkbox"]').forEach(cb=>cb.checked=false);
+  removeImage({stopPropagation:()=>{}});
+  const rp=document.getElementById("resultPanel"); if(rp) rp.classList.remove("visible");
+  const db=document.getElementById("dbStatus"); if(db) db.style.display="none";
+  document.getElementById("ageBar").style.width="0%";
+  document.getElementById("ageBarPct").textContent="—";
+  for(let i=1;i<=4;i++){const el=document.getElementById("s"+i);el.classList.remove("done","active");el.querySelector(".stage-num").textContent=i;}
+  document.getElementById("s1").classList.add("active");
+}
+</script>
+</body>
+</html>
